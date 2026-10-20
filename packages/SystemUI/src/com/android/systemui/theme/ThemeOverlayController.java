@@ -636,11 +636,16 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
      * Return the main theme color from a given {@link WallpaperColors} instance.
      */
     protected int getNeutralColor(@NonNull WallpaperColors wallpaperColors) {
-        return ColorScheme.getSeedColor(wallpaperColors);
+        // KitKat UI Project (Phase 1): pin the monet seed to Holo blue so
+        // wallpaper colors never override the Holo palette in SystemUI. The
+        // fabricated neutral/accent/dynamic overlays are all derived from this
+        // seed, so the whole palette stays in the Holo blue family.
+        return 0xFF33B5E5;
     }
 
     protected int getAccentColor(@NonNull WallpaperColors wallpaperColors) {
-        return ColorScheme.getSeedColor(wallpaperColors);
+        // KitKat UI Project (Phase 1): see getNeutralColor.
+        return 0xFF33B5E5;
     }
 
     private static DynamicScheme dynamicSchemeFromStyle(Style style, int color,

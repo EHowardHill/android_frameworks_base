@@ -5022,9 +5022,9 @@
     <string name="config_mediaProjectionPermissionDialogComponent" translatable="false">com.android.systemui/com.android.systemui.mediaprojection.permission.MediaProjectionPermissionActivity</string>
 
     <!-- Corner radius of system dialogs -->
-    <dimen name="config_dialogCornerRadius">28dp</dimen>
+    <dimen name="config_dialogCornerRadius">0dp</dimen>
     <!-- Corner radius of system buttons -->
-    <dimen name="config_buttonCornerRadius">4dp</dimen>
+    <dimen name="config_buttonCornerRadius">0dp</dimen>
     <!-- Corner radius for bottom sheet system dialogs -->
     <dimen name="config_bottomDialogCornerRadius">16dp</dimen>
     <!-- Corner radius of system progress bars -->
@@ -5039,7 +5039,7 @@
     <string name="config_bodyFontFamilyMedium" translatable="false">sans-serif-medium</string>
 
     <!-- Name of the font family to use in the default lockscreen clock -->
-    <string name="config_clockFontFamily" translatable="false">monospace</string>
+    <string name="config_clockFontFamily" translatable="false">kitkat-lock-clock</string>
 
     <!-- Size of icon shown beside a preference locked by admin -->
     <dimen name="config_restrictedIconSize">@dimen/restricted_icon_size_material</dimen>
@@ -5379,7 +5379,7 @@
     <!-- All of the paths defined for the batterymeter are defined on a 12x20 canvas, and must
      be parsable by android.utill.PathParser -->
     <string name="config_batterymeterPerimeterPath" translatable="false">
-                M3.5,2 v0 H1.33 C0.6,2 0,2.6 0,3.33 V13v5.67 C0,19.4 0.6,20 1.33,20 h9.33 C11.4,20 12,19.4 12,18.67 V13V3.33 C12,2.6 11.4,2 10.67,2 H8.5 V0 H3.5 z M2,18v-7V4h8v9v5H2L2,18z
+                M3.5,2 H0 V20 H12 V2 H8.5 V0 H3.5 z M2,18 V4 H10 V18 z
     </string>
     <string name="config_batterymeterErrorPerimeterPath" translatable="false">@string/config_batterymeterPerimeterPath</string>
     <string name="config_batterymeterFillMask" translatable="false">
