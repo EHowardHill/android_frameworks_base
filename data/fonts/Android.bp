@@ -44,6 +44,70 @@ prebuilt_font {
     src: "AndroidClock.ttf",
 }
 
+// KitKat UI Project (Phase 1): 2013 Roboto family, from AOSP android-4.4.4_r1.
+// Installed under distinct names to avoid colliding with the variable-font
+// Roboto-Regular.ttf provided by external/roboto-fonts, which stays installed
+// as the DroidSans symlink provider. Referenced by data/fonts/fonts.xml.
+prebuilt_font {
+    name: "Roboto2013-Regular.ttf",
+    src: "Roboto2013-Regular.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-Bold.ttf",
+    src: "Roboto2013-Bold.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-Italic.ttf",
+    src: "Roboto2013-Italic.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-BoldItalic.ttf",
+    src: "Roboto2013-BoldItalic.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-Light.ttf",
+    src: "Roboto2013-Light.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-LightItalic.ttf",
+    src: "Roboto2013-LightItalic.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-Thin.ttf",
+    src: "Roboto2013-Thin.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-ThinItalic.ttf",
+    src: "Roboto2013-ThinItalic.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-Condensed-Regular.ttf",
+    src: "Roboto2013-Condensed-Regular.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-Condensed-Bold.ttf",
+    src: "Roboto2013-Condensed-Bold.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-Condensed-Italic.ttf",
+    src: "Roboto2013-Condensed-Italic.ttf",
+}
+
+prebuilt_font {
+    name: "Roboto2013-Condensed-BoldItalic.ttf",
+    src: "Roboto2013-Condensed-BoldItalic.ttf",
+}
+
 /////////////////////////////////
 // Copies the font configuration file into system/etc for the product as fonts.xml.
 // Additional fonts should be installed to /product/fonts/ alongside a corresponding
