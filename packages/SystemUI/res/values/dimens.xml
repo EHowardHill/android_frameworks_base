@@ -307,13 +307,13 @@
     <dimen name="notification_min_interaction_height">40dp</dimen>
 
     <!-- Radius for notifications corners without adjacent notifications -->
-    <dimen name="notification_corner_radius">28dp</dimen>
+    <dimen name="notification_corner_radius">0dp</dimen>
 
     <!-- Distance over which notification corner animations run, near the shelf while scrolling. -->
     <dimen name="notification_corner_animation_distance">48dp</dimen>
 
     <!-- Radius for notifications corners with adjacent notifications -->
-    <dimen name="notification_corner_radius_small">4dp</dimen>
+    <dimen name="notification_corner_radius_small">0dp</dimen>
 
     <!-- the padding of the shelf icon container -->
     <dimen name="shelf_icon_container_padding">13dp</dimen>
@@ -578,7 +578,7 @@
 
     <dimen name="volume_dialog_slider_width">42dp</dimen>
 
-    <dimen name="volume_dialog_slider_corner_radius">21dp</dimen>
+    <dimen name="volume_dialog_slider_corner_radius">2dp</dimen>
 
     <!-- (volume_dialog_panel_width - rounded_slider_icon_size) / 2 -->
     <dimen name="volume_slider_icon_inset">11dp</dimen>
