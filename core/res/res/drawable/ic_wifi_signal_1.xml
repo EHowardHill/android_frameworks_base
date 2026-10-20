@@ -19,10 +19,27 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
-    <path
-        android:fillColor="@android:color/white"
-        android:pathData="M12,2.01c-4.75,0-9.03,2.08-12,5.39L12,22L24,7.4C21.03,4.09,16.75,2.01,12,2.01z M12,18.86L2.7,7.54 C5.27,5.28,8.58,4.01,12,4.01s6.73,1.27,9.3,3.53L12,18.86z" />
-    <path
-        android:fillColor="@android:color/white"
-        android:pathData="M16.42,16.63L12,22l-4.42-5.37c0.15-0.74,0.48-1.43,0.95-1.99C9.35,13.64,10.6,13,12,13s2.65,0.64,3.47,1.64 C15.94,15.2,16.27,15.89,16.42,16.63z" />
+    <!-- KitKat UI Project (Phase 2): 4.4 arc-fan wifi glyph -->
+  <path
+      android:pathData="M8.6,18.2 A4.4,4.4 0 0 1 15.4,18.2"
+      android:strokeColor="@android:color/white"
+      android:strokeWidth="3.1"
+      android:strokeAlpha="1.0"
+  />
+  <path
+      android:pathData="M5.6,15.6 A8.4,8.4 0 0 1 18.4,15.6"
+      android:strokeColor="@android:color/white"
+      android:strokeWidth="3.1"
+      android:strokeAlpha="0.4"
+  />
+  <path
+      android:pathData="M2.5,13.0 A12.4,12.4 0 0 1 21.5,13.0"
+      android:strokeColor="@android:color/white"
+      android:strokeWidth="3.1"
+      android:strokeAlpha="0.4"
+  />
+  <path
+      android:pathData="M10.2,20.5 a1.8,1.8 0 1 0 3.6,0 a1.8,1.8 0 1 0 -3.6,0 z"
+      android:fillColor="@android:color/white"
+  />
 </vector>

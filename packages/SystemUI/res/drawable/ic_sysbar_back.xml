@@ -20,8 +20,13 @@
     android:autoMirrored="true"
     android:viewportWidth="20"
     android:viewportHeight="20">
-
+    <!-- KitKat UI Project (Phase 2): outlined 4.4 navbar glyph -->
     <path
-        android:fillColor="?attr/singleToneColor"
-        android:pathData="M15.5417 1.66669C15.1833 1.66669 14.8417 1.76669 14.5333 1.94169L3.21667 8.74169C2.775 9.00002 2.5 9.48335 2.5 10C2.5 10.5167 2.775 11 3.21667 11.2584L14.5333 18.05C14.8417 18.2334 15.1833 18.325 15.5417 18.325C16.625 18.325 17.5 17.45 17.5 16.3667V3.62502C17.5 2.54169 16.625 1.66669 15.5417 1.66669Z" />
+        android:pathData="M16,3 L3.5,9.4 C3,9.7 3,10.3 3.5,10.6 L16,17 Z"
+        android:strokeColor="?attr/singleToneColor"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+    />
 </vector>

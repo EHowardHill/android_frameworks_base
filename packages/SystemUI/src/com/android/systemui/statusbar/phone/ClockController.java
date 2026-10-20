@@ -65,8 +65,9 @@ public class ClockController {
                             Settings.Secure.getString(mContext.getContentResolver(),
                                     StatusBarIconController.ICON_HIDE_LIST)).contains("clock");
                 } else if (statusBarClock.equals(uri)) {
+                    // KitKat UI Project (Phase 2): clock on the right by default
                     mClockPosition = LineageSettings.System.getInt(mContext.getContentResolver(),
-                            LineageSettings.System.STATUS_BAR_CLOCK, CLOCK_POSITION_LEFT);
+                            LineageSettings.System.STATUS_BAR_CLOCK, CLOCK_POSITION_RIGHT);
                 }
                 updateActiveClock();
             }

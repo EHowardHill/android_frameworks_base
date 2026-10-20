@@ -19,8 +19,13 @@
     android:height="20dp"
     android:viewportWidth="20"
     android:viewportHeight="20">
-
+    <!-- KitKat UI Project (Phase 2): outlined 4.4 navbar glyph -->
     <path
-        android:fillColor="?attr/singleToneColor"
-        android:pathData="M10.0001 18.3334C5.40008 18.3334 1.66675 14.6 1.66675 10C1.66675 5.40002 5.40008 1.66669 10.0001 1.66669C14.6001 1.66669 18.3334 5.40002 18.3334 10C18.3334 14.6 14.6001 18.3334 10.0001 18.3334Z" />
+        android:pathData="M2.6,10 a7.4,7.4 0 1,0 14.8,0 a7.4,7.4 0 1,0 -14.8,0 Z"
+        android:strokeColor="?attr/singleToneColor"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+    />
 </vector>
