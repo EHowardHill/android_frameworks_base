@@ -861,10 +861,38 @@ public class QuickSettingsController implements Dumpable {
         if (isQsFragmentCreated()) {
             updateMinHeight();
             mMaxExpansionHeight = mQs.getDesiredHeight();
+            applyDonorFlipToMaxExpansionHeight();
             mNotificationStackScrollLayoutController.setMaxTopPadding(
                     getMaxExpansionHeight());
         }
         return oldMaxHeight;
+    }
+
+    /**
+     * KitKat UI Project (15.3): donor two-panel flip - in the unlocked
+     * shade the QS panel expands to fill the whole panel (maxTopPadding /
+     * the QS frame pushes the notification list fully below the fold),
+     * because the 4.4 QS panel REPLACED the notifications instead of
+     * stacking above them. Keyguard QS expansion keeps the modern sizing
+     * so shade-over-keyguard notifications stay visible. The stack view is
+     * match_parent minus its panel margins (notification_panel_margin_top/
+     * bottom); the margins are added back so the expanded QS area covers
+     * the full panel. Called from EVERY writer of mMaxExpansionHeight -
+     * updateHeightsOnShadeLayoutChange AND onHeightChanged - or the QS
+     * fragment's desired-height update clobbers the lift mid-session.
+     */
+    private void applyDonorFlipToMaxExpansionHeight() {
+        if (mBarState != StatusBarState.SHADE) {
+            return;
+        }
+        final View stackView = mNotificationStackScrollLayoutController.getView();
+        final ViewGroup.MarginLayoutParams stackLp =
+                (ViewGroup.MarginLayoutParams) stackView.getLayoutParams();
+        final int panelHeight = stackView.getHeight()
+                + stackLp.topMargin + stackLp.bottomMargin;
+        if (panelHeight > 0) {
+            mMaxExpansionHeight = Math.max(mMaxExpansionHeight, panelHeight);
+        }
     }
 
     /** Called when Shade view layout changed. Updates QS expansion or
@@ -1572,6 +1600,13 @@ public class QuickSettingsController implements Dumpable {
     @VisibleForTesting
     void onHeightChanged() {
         mMaxExpansionHeight = isQsFragmentCreated() ? mQs.getDesiredHeight() : 0;
+        // KitKat UI Project (15.3): this is the OTHER writer of
+        // mMaxExpansionHeight (the QS fragment's own height updates) - the
+        // donor flip lift must be re-applied here too or it is clobbered
+        // as soon as the tile grid lays out.
+        if (isQsFragmentCreated()) {
+            applyDonorFlipToMaxExpansionHeight();
+        }
         if (getExpanded() && mFullyExpanded) {
             mExpansionHeight = mMaxExpansionHeight;
             if (mExpansionHeightSetToMaxListener != null) {

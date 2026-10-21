@@ -18,6 +18,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     android:shape="rectangle">
-    <solid android:color="?androidprv:attr/materialColorSurfaceBright"/>
+    <!-- KitKat UI Project (14.8): screenshot overlay pills restyled to
+         4.4 dark chrome (was monet SurfaceBright - a white pill). -->
+    <solid android:color="#ee161616"/>
     <corners android:radius="@dimen/overlay_action_container_corner_radius"/>
 </shape>

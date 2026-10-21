@@ -31,7 +31,10 @@
         <item name="alertDialogTheme">@style/Theme.AlertDialog.SettingsLib</item>
     </style>
 
-    <style name="Theme.AlertDialog.SettingsLib" parent="@style/Theme.AppCompat.DayNight.Dialog.Alert">
+    <!-- KitKat UI Project (11.6): AppCompat DayNight resolves to the LIGHT
+         alert dialog in day mode; parented to the dark AppCompat dialog to
+         match the forced-dark Settings. -->
+    <style name="Theme.AlertDialog.SettingsLib" parent="@style/Theme.AppCompat.Dialog.Alert">
         <!-- TODO(b/189308264): fix the crash in Android R if set the attributes:
              <item name="colorAccent">@*android:color/accent_device_default_light</item>
              <item name="android:colorBackground">@color/settingslib_dialog_background</item>

@@ -2134,51 +2134,29 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
             return;
         }
         mIsFlinging = true;
-        // we want to perform an overshoot animation when flinging open
-        final boolean addOverscroll =
-                expand
-                        && mStatusBarStateController.getState() != KEYGUARD
-                        && mOverExpansion == 0.0f
-                        && vel >= 0;
-        final boolean shouldSpringBack = addOverscroll || (mOverExpansion != 0.0f && expand);
-        float overshootAmount = 0.0f;
-        if (addOverscroll) {
-            // Let's overshoot depending on the amount of velocity
-            overshootAmount = MathUtils.lerp(
-                    0.2f,
-                    1.0f,
-                    MathUtils.saturate(vel
-                            / (this.mFlingAnimationUtils.getHighVelocityPxPerSecond()
-                            * FACTOR_OF_HIGH_VELOCITY_FOR_MAX_OVERSHOOT)));
-            overshootAmount += mOverExpansion / mPanelFlingOvershootAmount;
-        }
-        ValueAnimator animator = createHeightAnimator(target, overshootAmount);
+        // KitKat UI Project (15.2): 4.4 PanelView flings settle exactly at
+        // the target with NO opening overshoot/springback - the modern
+        // bounce is retired. The rubberband settle (releasing a dragged-
+        // past-full panel) is preserved via mOverExpansion.
+        final boolean shouldSpringBack = (mOverExpansion != 0.0f && expand);
+        ValueAnimator animator = createHeightAnimator(target, 0.0f /* performOvershoot */);
         if (expand) {
             maybeVibrateOnOpening(true /* openingWithTouch */);
             if (expandBecauseOfFalsing && vel < 0) {
                 vel = 0;
             }
-            this.mFlingAnimationUtils.apply(animator, mExpandedHeight,
-                    target + overshootAmount * mPanelFlingOvershootAmount, vel,
-                    this.mView.getHeight());
-            if (vel == 0) {
-                animator.setDuration(SHADE_OPEN_SPRING_OUT_DURATION);
-            }
+            // KitKat UI Project (15.2): donor PanelView trajectory (2000dp/s^2
+            // constant acceleration, 3000dp/s cap, see KitKatPanelFling)
+            // replaces the FlingAnimationUtils bezier curves. A vel==0
+            // release runs the same accelerate-from-rest integration the
+            // donor used, instead of a canned spring.
+            KitKatPanelFling.apply(mResources, animator, mExpandedHeight, target, vel);
         } else {
             mHasVibratedOnOpen = false;
-            if (shouldUseDismissingAnimation()) {
-                if (vel == 0) {
-                    animator.setInterpolator(Interpolators.PANEL_CLOSE_ACCELERATED);
-                    long duration = (long) (200 + mExpandedHeight / this.mView.getHeight() * 100);
-                    animator.setDuration(duration);
-                } else {
-                    mFlingAnimationUtilsDismissing.apply(animator, mExpandedHeight, target, vel,
-                            this.mView.getHeight());
-                }
-            } else {
-                mFlingAnimationUtilsClosing.apply(
-                        animator, mExpandedHeight, target, vel, this.mView.getHeight());
-            }
+            // KitKat UI Project (15.2): donor collapse physics (100dp/s
+            // floor, unbounded closing acceleration) for both the
+            // dismissing and plain close paths - 4.4 had one close feel.
+            KitKatPanelFling.apply(mResources, animator, mExpandedHeight, target, vel);
 
             // Make it shorter if we run a canned animation
             if (vel == 0) {
@@ -4332,7 +4310,10 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
 
     private void onFlingQsWithoutClick(ValueAnimator animator, float qsExpansionHeight,
             float target, float vel) {
-        mFlingAnimationUtils.apply(animator, qsExpansionHeight, target, vel);
+        // KitKat UI Project (15.2): donor PanelView physics drives the QS
+        // expand/collapse fling too (was the FlingAnimationUtils bezier) -
+        // in 4.4 the QS panel was dragged/flung by the same engine.
+        KitKatPanelFling.apply(mResources, animator, qsExpansionHeight, target, vel);
     }
 
     private void onExpansionHeightSetToMax(boolean requestPaddingUpdate) {

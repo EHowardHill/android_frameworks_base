@@ -16,6 +16,10 @@
   -->
 
 <resources>
+    <!-- KitKat UI Project (11.6): Settings is forced dark (framework
+         Theme.DeviceDefault.Settings now parents the dark DeviceDefault in
+         the DAY bucket too), so the light values that used to run in day
+         mode are flipped to the values-night dark equivalents. -->
     <!-- KitKat UI Project: Settings accent/switch colors pinned to Holo blue
          (were wallpaper-extracted monet system_accent1_100/600,
          system_neutral2_100/300), matching the framework
@@ -27,27 +31,27 @@
     <color name="settingslib_state_off_color">@color/settingslib_switch_track_off</color>
 
     <!-- Material next thumb disable color-->
-    <color name="settingslib_thumb_disabled_color">@android:color/system_neutral2_100</color>
+    <color name="settingslib_thumb_disabled_color">@android:color/system_neutral1_700</color>
 
     <!-- Material next thumb off color-->
-    <color name="settingslib_thumb_off_color">@android:color/system_neutral2_300</color>
+    <color name="settingslib_thumb_off_color">@android:color/system_neutral1_400</color>
 
     <!-- Material next track on color-->
     <color name="settingslib_track_on_color">@*android:color/holo_blue_light</color>
 
     <!-- Material next track off color-->
-    <color name="settingslib_track_off_color">@color/settingslib_switch_track_off</color>
+    <color name="settingslib_track_off_color">@android:color/system_neutral1_700</color>
 
     <!-- Dialog accent color -->
     <color name="settingslib_dialog_accent">@*android:color/holo_blue_light</color>
     <!-- Dialog background color -->
-    <color name="settingslib_dialog_background">@color/settingslib_surface_light</color>
+    <color name="settingslib_dialog_background">@color/settingslib_surface_dark</color>
     <!-- Dialog error color. -->
-    <color name="settingslib_dialog_colorError">#d93025</color> <!-- Red 600 -->
+    <color name="settingslib_dialog_colorError">#f28b82</color> <!-- Red 300 -->
 
-    <color name="settingslib_colorSurfaceVariant">@android:color/system_neutral2_100</color>
+    <color name="settingslib_colorSurfaceVariant">@android:color/system_neutral1_700</color>
 
-    <color name="settingslib_colorSurfaceHeader">@android:color/system_neutral1_100</color>
+    <color name="settingslib_colorSurfaceHeader">@android:color/system_neutral1_700</color>
 
     <color name="settingslib_accent_device_default_dark">@*android:color/holo_blue_dark</color>
 
@@ -68,9 +72,9 @@
 
     <color name="settingslib_background_device_default_light">@android:color/system_neutral1_50</color>
 
-    <color name="settingslib_text_color_primary_device_default">@android:color/system_neutral1_900</color>
+    <color name="settingslib_text_color_primary_device_default">@android:color/system_neutral1_50</color>
 
-    <color name="settingslib_text_color_secondary_device_default">@android:color/system_neutral2_700</color>
+    <color name="settingslib_text_color_secondary_device_default">@android:color/system_neutral2_200</color>
 
     <!-- KitKat UI Project: Settings category headers pinned to Holo blue
          (was monet system_accent1_600) -->
@@ -84,8 +88,8 @@
 
     <color name="settingslib_colorAccentSecondary">@color/settingslib_accent_secondary_device_default</color>
 
-    <color name="settingslib_colorSurface">@color/settingslib_surface_light</color>
+    <color name="settingslib_colorSurface">@color/settingslib_surface_dark</color>
 
-    <color name="settingslib_spinner_title_color">@android:color/system_neutral1_900</color>
-    <color name="settingslib_spinner_dropdown_color">@android:color/system_neutral2_700</color>
+    <color name="settingslib_spinner_title_color">@android:color/system_neutral1_50</color>
+    <color name="settingslib_spinner_dropdown_color">@android:color/system_neutral2_200</color>
 </resources>

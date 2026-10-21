@@ -21,7 +21,11 @@
     android:id="@+id/qqs_header_constraint"
 >
 
-    <!-- KitKat UI Project: QS header user avatar at the start, before the clock -->
+    <!-- KitKat UI Project: QS header user avatar at the start, before the
+         clock. KitKat UI Project (12.2): the avatar belongs to the 4.4 QS
+         panel, not the half-open shade header - faded out in the QQS
+         constraint (the clock anchors to the start edge instead of
+         chaining off the avatar). -->
     <Constraint
         android:id="@+id/shade_header_user_avatar">
         <Layout
@@ -31,6 +35,9 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/qqs_header_bottom_guideline"
             />
+        <PropertySet
+            android:alpha="0"
+            />
     </Constraint>
 
     <Constraint
@@ -38,7 +45,7 @@
         <Layout
             android:layout_width="wrap_content"
             android:layout_height="@dimen/large_screen_shade_header_min_height"
-            app:layout_constraintStart_toEndOf="@id/shade_header_user_avatar"
+            app:layout_constraintStart_toStartOf="@id/begin_guide"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/qqs_header_bottom_guideline"
             app:layout_constraintEnd_toStartOf="@id/date"
@@ -65,6 +72,9 @@
         />
     </Constraint>
 
+    <!-- KitKat UI Project (15.1): retired - the header icons duplicated
+         the status bar (visible above the shade since 11.2). Kept in the
+         hierarchy for the ShadeHeaderController/privacy-chip wiring. -->
     <Constraint
         android:id="@+id/shade_header_system_icons">
         <Layout
@@ -77,6 +87,10 @@
             app:layout_constraintBottom_toBottomOf="@id/qqs_header_bottom_guideline"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintHorizontal_chainStyle="packed"
+            />
+        <PropertySet
+            android:alpha="0"
+            android:visibility="gone"
             />
     </Constraint>
 
@@ -105,6 +119,17 @@
             app:layout_constraintBottom_toBottomOf="@id/qqs_header_bottom_guideline"
             app:layout_constraintHorizontal_bias="1"
         />
+    </Constraint>
+
+    <!-- KitKat UI Project (12.2): 4.4 clear-all X, inboard of the gear -->
+    <Constraint
+        android:id="@+id/shade_header_clear_all_button">
+        <Layout
+            android:layout_width="@dimen/large_screen_shade_header_min_height"
+            android:layout_height="@dimen/large_screen_shade_header_min_height"
+            app:layout_constraintEnd_toStartOf="@id/shade_header_settings_button"
+            app:layout_constraintTop_toTopOf="parent"
+            />
     </Constraint>
 
     <!-- KitKat UI Project: settings gear pinned to the top-right of the

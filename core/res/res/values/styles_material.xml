@@ -465,22 +465,34 @@ please see styles_device_defaults.xml.
         <item name="fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- KitKat UI Project (12.6): 4.4 notification typography, ported from
+         donor TextAppearance.StatusBar.EventContent - fixed gray text
+         (#999999) instead of the uiMode-switched *_current selectors (which
+         resolve to dark-on-dark text against our P3 #ff252525 rows in day
+         mode). -->
     <style name="TextAppearance.Material.Notification">
-        <item name="textColor">@color/notification_secondary_text_color_current</item>
+        <item name="textColor">#ff999999</item>
         <item name="textSize">@dimen/notification_text_size</item>
     </style>
 
     <style name="TextAppearance.Material.Notification.Reply" />
 
+    <!-- KitKat UI Project (12.6): donor TextAppearance.StatusBar.
+         EventContent.Title - white, Roboto-light, bold, 18sp (the modern
+         medium 14sp title reads nothing like 4.4). -->
     <style name="TextAppearance.Material.Notification.Title">
-        <item name="textColor">@color/notification_primary_text_color_current</item>
-        <item name="fontFamily">sans-serif-medium</item>
+        <item name="textColor">#ffffffff</item>
+        <item name="fontFamily">sans-serif-light</item>
+        <item name="textStyle">bold</item>
         <item name="textSize">@dimen/notification_title_text_size</item>
     </style>
 
+    <!-- KitKat UI Project (12.6): same donor title treatment for the
+         big-text headsup/expanded title (donor had no BigTitle variant). -->
     <style name="TextAppearance.Material.Notification.BigTitle">
-        <item name="textColor">@color/notification_primary_text_color_current</item>
-        <item name="fontFamily">sans-serif-medium</item>
+        <item name="textColor">#ffffffff</item>
+        <item name="fontFamily">sans-serif-light</item>
+        <item name="textStyle">bold</item>
         <item name="textSize">@dimen/notification_big_title_text_size</item>
     </style>
 
@@ -488,14 +500,18 @@ please see styles_device_defaults.xml.
         <item name="textSize">@dimen/notification_subtext_size</item>
     </style>
 
+    <!-- KitKat UI Project (12.6): donor EventContent.Info - #999999 -->
     <style name="TextAppearance.Material.Notification.Info">
+        <item name="textColor">#ff999999</item>
         <item name="textSize">@dimen/notification_subtext_size</item>
     </style>
 
     <style name="TextAppearance.Material.Notification.Time" parent="TextAppearance.Material.Notification.Info" />
 
-    <!-- unused; keep identical to parent -->
-    <style name="TextAppearance.Material.Notification.Emphasis"/>
+    <!-- KitKat UI Project (12.6): donor EventContent.Emphasis - #CCCCCC -->
+    <style name="TextAppearance.Material.Notification.Emphasis">
+        <item name="textColor">#ffcccccc</item>
+    </style>
 
     <style name="TextAppearance.Material.ListItem" parent="TextAppearance.Material.Subhead" />
     <style name="TextAppearance.Material.ListItemSecondary" parent="TextAppearance.Material.Body1" />

@@ -29,6 +29,10 @@ please see themes_device_defaults.xml.
 ===============================================================
  -->
 <resources>
+    <!-- KitKat UI Project (14.2): text selection handles repointed to the
+         4.4 Holo handle PNGs (donor core/res text_select_handle_*.png,
+         copied as kitkat_text_select_handle_*) - the material teardrops
+         were an L+ visual. -->
 
     <!-- Honeycomb holographic theme (dark version).
          <p>This is the default system theme for apps that target API level 11 - 20. Starting
@@ -232,9 +236,9 @@ please see themes_device_defaults.xml.
         <item name="scrollbarTrackVertical">@null</item>
 
         <!-- Text selection handle attributes -->
-        <item name="textSelectHandleLeft">@drawable/text_select_handle_left_material</item>
-        <item name="textSelectHandleRight">@drawable/text_select_handle_right_material</item>
-        <item name="textSelectHandle">@drawable/text_select_handle_middle_material</item>
+        <item name="textSelectHandleLeft">@drawable/kitkat_text_select_handle_left</item>
+        <item name="textSelectHandleRight">@drawable/kitkat_text_select_handle_right</item>
+        <item name="textSelectHandle">@drawable/kitkat_text_select_handle_middle</item>
         <item name="textSelectHandleWindowStyle">@style/Widget.Holo.TextSelectHandle</item>
         <item name="textEditSuggestionItemLayout">@layout/text_edit_suggestion_item</item>
         <item name="textEditSuggestionContainerLayout">@layout/text_edit_suggestion_container</item>
@@ -595,9 +599,9 @@ please see themes_device_defaults.xml.
         <item name="scrollbarTrackVertical">@null</item>
 
         <!-- Text selection handle attributes -->
-        <item name="textSelectHandleLeft">@drawable/text_select_handle_left_material</item>
-        <item name="textSelectHandleRight">@drawable/text_select_handle_right_material</item>
-        <item name="textSelectHandle">@drawable/text_select_handle_middle_material</item>
+        <item name="textSelectHandleLeft">@drawable/kitkat_text_select_handle_left</item>
+        <item name="textSelectHandleRight">@drawable/kitkat_text_select_handle_right</item>
+        <item name="textSelectHandle">@drawable/kitkat_text_select_handle_middle</item>
         <item name="textSelectHandleWindowStyle">@style/Widget.Holo.TextSelectHandle</item>
         <item name="textEditSuggestionItemLayout">@layout/text_edit_suggestion_item</item>
         <item name="textEditSuggestionContainerLayout">@layout/text_edit_suggestion_container</item>

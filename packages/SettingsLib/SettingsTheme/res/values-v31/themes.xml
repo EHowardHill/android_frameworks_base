@@ -36,15 +36,18 @@
         <!-- Suppress the built-in action bar -->
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <!-- Set up edge-to-edge configuration for top app bar -->
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- KitKat UI Project (11.6): 4.4 subpage bars are solid black. -->
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/black</item>
         <item name="colorControlNormal">?android:attr/colorControlNormal</item>
         <!-- For AndroidX AlertDialog -->
         <item name="alertDialogTheme">@style/Theme.AlertDialog.SettingsLib</item>
     </style>
 
-    <style name="Theme.AlertDialog.SettingsLib" parent="@style/Theme.AppCompat.DayNight.Dialog.Alert">
+    <!-- KitKat UI Project (11.6): AppCompat DayNight resolves to the LIGHT
+         alert dialog in day mode; parented to the dark AppCompat dialog to
+         match the forced-dark Settings. -->
+    <style name="Theme.AlertDialog.SettingsLib" parent="@style/Theme.AppCompat.Dialog.Alert">
         <item name="colorAccent">@color/settingslib_dialog_accent</item>
         <item name="android:colorError">@color/settingslib_dialog_colorError</item>
         <item name="android:colorBackground">@color/settingslib_dialog_background</item>

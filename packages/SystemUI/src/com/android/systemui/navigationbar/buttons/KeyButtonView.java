@@ -39,6 +39,7 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
@@ -99,13 +100,38 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
     // android-4.4.4_r1 frameworks/base SystemUI KeyButtonView. Draws the
     // ic_sysbar_highlight glow behind the icon, animating alpha/scale on
     // press (GLOW_MAX_SCALE_FACTOR), in place of the modern ripple.
+    // KitKat UI Project (11.4): donor deltas that were missing from the
+    // first port - icons render at QUIESCENT ALPHA 0.7 and brighten to
+    // full alpha on press (the strongest visible 4.4 feedback cue), the
+    // glow alpha is multiplied by the drawing alpha, and the release
+    // animation fades drawingAlpha back to quiescent alongside the glow.
     private static final float GLOW_MAX_SCALE_FACTOR = 1.8f;
+    public static final float DEFAULT_QUIESCENT_ALPHA = 0.70f;
     private final Drawable mGlowBG;
     private final int mGlowWidth;
     private final int mGlowHeight;
     private float mGlowAlpha = 0f;
     private float mGlowScale = 1f;
+    private float mDrawingAlpha = 1f;
+    private float mQuiescentAlpha = DEFAULT_QUIESCENT_ALPHA;
+    private Animator mAnimateToQuiescent = new ObjectAnimator();
     private AnimatorSet mGlowAnim;
+    // KitKat UI Project (11.4 fix): redraw trigger for the release fade -
+    // even if every per-frame invalidation is lost (detached window,
+    // cancelled animator), this forces one more draw shortly after the
+    // fade window, which the onDraw self-healing guard then renders at
+    // the quiescent state.
+    private final Runnable mGlowFailSafe = new Runnable() {
+        @Override
+        public void run() {
+            if (!isPressed()) {
+                if (getParent() instanceof View parent) {
+                    parent.invalidate();
+                }
+                invalidate();
+            }
+        }
+    };
 
     @VisibleForTesting
     public enum NavBarButtonEvent implements UiEventLogger.UiEventEnum {
@@ -216,12 +242,45 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
         setBackground(null);
         setWillNotDraw(false);
         forceHasOverlappingRendering(false);
+        // KitKat UI Project (11.4): 4.4 buttons rest at 70% icon alpha
+        // (donor constructor setDrawingAlpha(mQuiescentAlpha)).
+        setDrawingAlpha(mQuiescentAlpha);
+    }
+
+    // KitKat UI Project (11.4): donor drawingAlpha machinery. ImageView's
+    // setAlpha(int) overload sets the alpha on this view's drawable
+    // directly (kept verbatim from the 4.4 donor).
+    public void setDrawingAlpha(float x) {
+        setAlpha((int) (x * 255));
+        mDrawingAlpha = x;
+    }
+
+    public float getDrawingAlpha() {
+        return mDrawingAlpha;
     }
 
     // KitKat UI Project (P9): the 4.4 glow drawing, ported from 4.4
     // KeyButtonView.onDraw (draw the glow scaled/alpha'd behind the icon).
     @Override
     protected void onDraw(Canvas canvas) {
+        // KitKat UI Project (11.4 fix): self-healing guard. If the button
+        // is not pressed and no glow animation is running, the glow MUST
+        // be at its quiescent state - force it before drawing so a lost,
+        // cancelled or non-invalidating fade can never freeze the halo on
+        // screen. The guard is a no-op whenever the animations behave
+        // (during the fade mGlowAnim.isRunning() is true; after it,
+        // glowAlpha is already 0).
+        if (!isPressed()
+                && (mGlowAnim == null || !mGlowAnim.isRunning())
+                && (mGlowAlpha != 0f || mGlowScale != 1f
+                        || mDrawingAlpha != mQuiescentAlpha)) {
+            mGlowAlpha = 0f;
+            mGlowScale = 1f;
+            // ImageView.setAlpha(int) invalidates when the value changes;
+            // postInvalidateOnAnimation covers the case where it does not.
+            setDrawingAlpha(mQuiescentAlpha);
+            postInvalidateOnAnimation();
+        }
         if (mGlowBG != null) {
             canvas.save();
             final int w = getWidth();
@@ -232,7 +291,9 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
             final int margin = (drawW - w) / 2;
             canvas.scale(mGlowScale, mGlowScale, w * 0.5f, h * 0.5f);
             mGlowBG.setBounds(-margin, 0, drawW - margin, drawH);
-            mGlowBG.setAlpha((int) (mGlowAlpha * 255));
+            // KitKat UI Project (11.4): donor multiplies the glow by the
+            // drawing alpha (mDrawingAlpha * mGlowAlpha * 255).
+            mGlowBG.setAlpha((int) (mDrawingAlpha * mGlowAlpha * 255));
             mGlowBG.draw(canvas);
             canvas.restore();
         }
@@ -240,13 +301,19 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
     }
 
     private void invalidateGlow() {
-        // the glow can extend beyond our bounds when scaled up
-        final float rx = (getWidth() * (GLOW_MAX_SCALE_FACTOR - 1.0f)) / 2.0f + 1.0f;
-        final float ry = (getHeight() * (GLOW_MAX_SCALE_FACTOR - 1.0f)) / 2.0f + 1.0f;
+        // KitKat UI Project (11.4 fix): the first port's dirty-rect
+        // invalidation never produced reliable per-frame redraws on the
+        // modern render pipeline (the glow did not appear at all before
+        // the quiescent-alpha work, and froze at full alpha after release
+        // with it, because only state-change redraws ever happened). The
+        // donor invalidates the whole view per frame (setGlowAlpha ->
+        // invalidate()); the parent is invalidated too because the 1.8x
+        // scaled glow draws outside the view bounds and the parent has
+        // clipChildren=false.
         if (getParent() instanceof View parent) {
             parent.invalidate();
         }
-        invalidate((int) -rx, (int) -ry, (int) (getWidth() + rx), (int) (getHeight() + ry));
+        invalidate();
     }
 
     @Override
@@ -259,8 +326,13 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
                 }
                 final AnimatorSet as = mGlowAnim = new AnimatorSet();
                 if (pressed) {
+                    removeCallbacks(mGlowFailSafe);
                     if (mGlowScale < GLOW_MAX_SCALE_FACTOR) mGlowScale = GLOW_MAX_SCALE_FACTOR;
-                    if (mGlowAlpha < 1f) mGlowAlpha = 1f;
+                    if (mGlowAlpha < mQuiescentAlpha) mGlowAlpha = mQuiescentAlpha;
+                    // KitKat UI Project (11.4): donor snaps the icon to
+                    // full alpha on press - the icon brighten plus the glow
+                    // halo are the complete 4.4 press feedback.
+                    setDrawingAlpha(1f);
                     as.playTogether(
                             ObjectAnimator.ofPropertyValuesHolder(this,
                                     PropertyValuesHolder.ofFloat("glowAlpha", 1f)),
@@ -269,12 +341,19 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
                                             GLOW_MAX_SCALE_FACTOR)));
                     as.setDuration(50);
                 } else {
+                    // KitKat UI Project (11.4): donor release animation fades
+                    // the icon back to quiescent alpha alongside the glow.
+                    mAnimateToQuiescent.cancel();
+                    mAnimateToQuiescent =
+                            ObjectAnimator.ofFloat(this, "drawingAlpha", mQuiescentAlpha);
                     as.playTogether(
                             ObjectAnimator.ofPropertyValuesHolder(this,
                                     PropertyValuesHolder.ofFloat("glowAlpha", 0f)),
                             ObjectAnimator.ofPropertyValuesHolder(this,
-                                    PropertyValuesHolder.ofFloat("glowScale", 1f)));
+                                    PropertyValuesHolder.ofFloat("glowScale", 1f)),
+                            mAnimateToQuiescent);
                     as.setDuration(500);
+                    postDelayed(mGlowFailSafe, 600);
                 }
                 as.start();
             }
@@ -420,10 +499,14 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
                 x = (int) ev.getX();
                 y = (int) ev.getY();
 
-                float slop = QuickStepContract.getQuickStepTouchSlopPx(getContext());
-                if (Math.abs(x - mTouchDownX) > slop || Math.abs(y - mTouchDownY) > slop) {
-                    // When quick step is enabled, prevent animating the ripple triggered by
-                    // setPressed and decide to run it on touch up
+                // KitKat UI Project (11.4): the stock quickstep touch-slop
+                // cancel killed the 50ms glow fade-in on small pointer jitter
+                // (especially mouse input on the emulator). 4.4 kept the
+                // button pressed while the pointer stayed within bounds
+                // (classic View behavior); with the KitKat launcher there is
+                // no gesture nav to protect here, and abortCurrentGesture()
+                // remains the system-side cancel path.
+                if (x < 0 || x > getWidth() || y < 0 || y > getHeight()) {
                     setPressed(false);
                     removeCallbacks(mCheckLongPress);
                 }

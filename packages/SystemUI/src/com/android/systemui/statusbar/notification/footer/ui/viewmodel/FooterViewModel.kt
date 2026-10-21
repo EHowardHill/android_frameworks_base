@@ -45,27 +45,13 @@ class FooterViewModel(
     seenNotificationsInteractor: SeenNotificationsInteractor,
     shadeInteractor: ShadeInteractor,
 ) {
+    // KitKat UI Project (12.2): clear-all moved into the shade header as
+    // the 4.4 X button (ShadeHeaderController); the footer copy is retired.
     val clearAllButton: FooterButtonViewModel =
         FooterButtonViewModel(
             labelId = flowOf(R.string.clear_all_notifications_text),
             accessibilityDescriptionId = flowOf(R.string.accessibility_clear_all),
-            isVisible =
-                activeNotificationsInteractor.hasClearableNotifications
-                    .sample(
-                        // TODO(b/322167853): This check is currently duplicated in
-                        //  NotificationListViewModel, but instead it should be a field in
-                        //  ShadeAnimationInteractor.
-                        combine(
-                                shadeInteractor.isShadeFullyExpanded,
-                                shadeInteractor.isShadeTouchable,
-                                ::Pair
-                            )
-                            .onStart { emit(Pair(false, false)) }
-                    ) { hasClearableNotifications, (isShadeFullyExpanded, animationsEnabled) ->
-                        val shouldAnimate = isShadeFullyExpanded && animationsEnabled
-                        AnimatableEvent(hasClearableNotifications, shouldAnimate)
-                    }
-                    .toAnimatedValueFlow(),
+            isVisible = flowOf(AnimatedValue.NotAnimating(false)),
         )
 
     val manageButtonShouldLaunchHistory =

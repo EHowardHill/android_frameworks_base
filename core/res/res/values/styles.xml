@@ -1497,14 +1497,20 @@ please see styles_device_defaults.xml.
     </style>
 
     <!-- @hide -->
-    <style name="aerr_list_item" parent="Widget.Material.Light.Button.Borderless">
+    <!-- KitKat UI Project (11.5): was hardcoded
+         Widget.Material.Light.Button.Borderless + selectableItemBackground -
+         a transparent-at-rest Material list button the DeviceDefault->Holo
+         rebase never touched, so the crash-dialog actions floated with no
+         chrome over the Holo dark dialog. Repointed to the DeviceDefault
+         (now Holo) button style so the rows carry real 4.4 button chrome;
+         the transparent background override dropped. -->
+    <style name="aerr_list_item" parent="Widget.DeviceDefault.Button">
         <item name="minHeight">?attr/listPreferredItemHeightSmall</item>
         <item name="textAppearance">?attr/textAppearanceListItemSmall</item>
         <item name="textColor">?attr/textColorAlertDialogListItem</item>
         <item name="gravity">center_vertical</item>
         <item name="paddingStart">?attr/dialogPreferredPadding</item>
         <item name="paddingEnd">?attr/dialogPreferredPadding</item>
-        <item name="background">?attr/selectableItemBackground</item>
         <item name="drawablePadding">32dp</item>
         <item name="drawableTint">?android:attr/colorAccent</item>
         <item name="drawableTintMode">src_atop</item>

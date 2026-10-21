@@ -124,11 +124,14 @@
         <item name="android:textColor">?attr/onShadeInactiveVariant</item>
     </style>
 
+    <!-- KitKat UI Project (11.1): 4.4 tile label per donor
+         TextAppearance.QuickSettings.TileView - 12sp regular, all-caps,
+         gray; weight/lineHeight/letterSpacing are Lollipop-era and made
+         the label overflow the 110dp donor cell. Color stays
+         programmatic (onShadeActive/onShadeInactive). -->
     <style name="TextAppearance.QS.TileLabel">
         <item name="android:textSize">@dimen/qs_tile_text_size</item>
-        <item name="android:letterSpacing">0.01</item>
-        <item name="android:lineHeight">20sp</item>
-        <item name="android:fontFamily">@*android:string/config_bodyFontFamilyMedium</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="TextAppearance.QS.TileLabel.Secondary">

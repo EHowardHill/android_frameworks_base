@@ -16,6 +16,8 @@
 -->
 
 <resources>
+    <!-- KitKat UI Project (11.6): dark switch track/thumb values (Settings
+         is forced dark; mirrors values-night-v34). -->
     <!-- KitKat UI Project: switch accent colors pinned to Holo blue (were
          wallpaper-extracted monet system_accent1_*), matching the framework
          accent_device_default_* pins. -->
@@ -32,13 +34,13 @@
     <color name="settingslib_thumb_on_color">@*android:color/holo_blue_light</color>
 
     <!-- Material next thumb off color-->
-    <color name="settingslib_thumb_off_color">@android:color/system_neutral2_500</color>
+    <color name="settingslib_thumb_off_color">@android:color/system_neutral2_400</color>
 
     <!-- Material next track on color-->
     <color name="settingslib_track_on_color">@*android:color/holo_blue_light</color>
 
     <!-- Material next track off color-->
-    <color name="settingslib_track_off_color">@android:color/system_surface_container_highest_light</color>
+    <color name="settingslib_track_off_color">@android:color/system_surface_container_highest_dark</color>
 
     <!-- Material next track outline color-->
     <color name="settingslib_track_online_color">@color/settingslib_switch_track_outline_color</color>

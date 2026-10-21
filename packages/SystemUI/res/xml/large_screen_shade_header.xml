@@ -84,6 +84,15 @@
     </Constraint>
 
     <!-- KitKat UI Project: settings gear pinned to the top-right of the header -->
+    <!-- KitKat UI Project (12.2): 4.4 clear-all X, inboard of the gear -->
+    <Constraint android:id="@+id/shade_header_clear_all_button">
+        <Layout
+            android:layout_width="@dimen/large_screen_shade_header_min_height"
+            android:layout_height="@dimen/large_screen_shade_header_min_height"
+            app:layout_constraintEnd_toStartOf="@id/shade_header_settings_button"
+            app:layout_constraintTop_toTopOf="parent" />
+    </Constraint>
+
     <Constraint android:id="@+id/shade_header_settings_button">
         <Layout
             android:layout_width="@dimen/shade_header_settings_button_width"

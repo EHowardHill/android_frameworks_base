@@ -283,6 +283,12 @@ open class QSTileViewImpl @JvmOverloads constructor(
         customDrawableView = sideView.requireViewById(R.id.customDrawable)
         chevronView = sideView.requireViewById(R.id.chevron)
         setChevronColor(getChevronColorForState(QSTile.State.DEFAULT_STATE))
+        // KitKat UI Project (14.5): the 4.4 tile showed a single centered
+        // glyph - no expand chevron, no per-tile side icon. The side view
+        // is kept in the hierarchy (QSAnimator references its position)
+        // but never rendered. Only QuickAccessWalletTile uses its custom
+        // side drawable; wallet is not a stock 4.4 surface.
+        sideView.visibility = GONE
         addView(sideView)
     }
 

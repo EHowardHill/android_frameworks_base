@@ -460,7 +460,13 @@
     <dimen name="clipboard_overlay_max_font">50sp</dimen>
 
     <!-- The width of the view containing navigation buttons -->
-    <dimen name="navigation_key_width">70dp</dimen>
+    <!-- KitKat UI Project (11.3): donor navigation_key_width is 80dp; our
+         config_navBarLayout puts each KeyButtonView in an 80dp absolute cell
+         ([80AC]) where the "C" suffix only centers VERTICALLY - a 70dp view
+         left-hugs the cell and puts the home glyph ~5dp off screen-center
+         (mismatched with the launcher all-apps button). At 80dp the view
+         fills the cell and scaleType=center renders the glyph dead-center. -->
+    <dimen name="navigation_key_width">80dp</dimen>
 
     <!-- The width/height of the icon of a navigation button -->
     <dimen name="navigation_icon_size">24dp</dimen>
@@ -542,10 +548,12 @@
     <dimen name="hover_system_icons_container_padding_top">0dp</dimen>
     <dimen name="hover_system_icons_container_padding_bottom">0dp</dimen>
 
-    <!-- The top margin of the panel that holds the list of notifications.
-         On phones it's always 0dp but it's overridden in Car UI
-    -->
-    <dimen name="notification_panel_margin_top">0dp</dimen>
+    <!-- KitKat UI Project (11.2): the shade header/panel must start BELOW the
+         status bar, like the 4.4 panel (structurally under the 25dp bar).
+         Stock pins it at 0dp and hides the overlap under a TRANSPARENT bar;
+         our P2 OPAQUE bar paints over the top of the header otherwise.
+         References the framework dimen so cutout-inflated bars track it. -->
+    <dimen name="notification_panel_margin_top">@*android:dimen/status_bar_height</dimen>
 
     <!-- The minimum content height for the split shade NSSL.
          It is used because if the height is too small, the expansion motion is too fast.
@@ -587,6 +595,9 @@
     <dimen name="volume_slider_icon_inset">11dp</dimen>
 
     <dimen name="volume_dialog_track_width">40dp</dimen>
+    <!-- KitKat UI Project (14.10): 4.4 slim volume rail -->
+    <dimen name="kitkat_volume_track_width">4dp</dimen>
+    <dimen name="kitkat_volume_track_width_half">2dp</dimen>
 
     <dimen name="volume_dialog_track_corner_radius">2dp</dimen>
 
@@ -656,9 +667,14 @@
     <dimen name="qs_tile_margin_top_bottom">4dp</dimen>
     <dimen name="qs_brightness_margin_top">8dp</dimen>
     <dimen name="qs_brightness_margin_bottom">16dp</dimen>
-    <dimen name="qqs_layout_margin_top">16dp</dimen>
-    <dimen name="qqs_layout_padding_bottom">24dp</dimen>
-    <item name="qqs_expand_clock_scale" format="float" type="dimen">2.57</item>
+    <!-- KitKat UI Project (12.1): half-open shade shows notifications only
+         (4.4 first pull); with quick_qs_panel_max_tiles=0 the QQS panel is
+         empty, so it must not reserve header space. -->
+    <dimen name="qqs_layout_margin_top">0dp</dimen>
+    <dimen name="qqs_layout_padding_bottom">0dp</dimen>
+    <!-- KitKat UI Project (15.1): 4.4 showed a normal-size clock in the QS
+         header; the modern 2.57x big-clock scaling is retired. -->
+    <item name="qqs_expand_clock_scale" format="float" type="dimen">1.0</item>
 
     <!-- Most of the time it should be the same as notification_side_paddings as it's vertically
          aligned with notifications. The exception is split shade when this value becomes
@@ -686,7 +702,10 @@
     <dimen name="qs_side_view_size">28dp</dimen>
     <dimen name="qs_label_container_margin">10dp</dimen>
     <dimen name="qs_quick_tile_size">60dp</dimen>
-    <dimen name="qs_tile_padding">12dp</dimen>
+    <!-- KitKat UI Project (11.1): donor tile cell has NO padding - the 4.4
+         content stack (27+32+17+12sp label) fits the 110dp cell; the modern
+         12dp padding was the label-clip overflow. -->
+    <dimen name="qs_tile_padding">0dp</dimen>
     <dimen name="qs_tile_start_padding">16dp</dimen>
     <dimen name="qs_drawable_end_margin">4dp</dimen>
     <dimen name="qs_page_indicator_width">16dp</dimen>
@@ -695,7 +714,9 @@
          Scaled @dimen/qs_page_indicator-width by .4f.
     -->
     <dimen name="qs_page_indicator_dot_width">6.4dp</dimen>
-    <dimen name="qs_tile_text_size">14sp</dimen>
+    <!-- KitKat UI Project (11.1): donor TextAppearance.QuickSettings.TileView
+         is 12sp (values/ styles.xml:88) -->
+    <dimen name="qs_tile_text_size">12sp</dimen>
     <dimen name="qs_panel_padding">16dp</dimen>
     <dimen name="qs_dual_tile_padding_horizontal">6dp</dimen>
     <dimen name="qs_panel_elevation">4dp</dimen>
@@ -709,7 +730,9 @@
     <dimen name="qs_header_carrier_separator_width">6dp</dimen>
     <dimen name="qs_carrier_margin_width">4dp</dimen>
     <dimen name="qs_footer_icon_size">20dp</dimen>
-    <dimen name="qs_header_height">120dp</dimen>
+    <!-- KitKat UI Project (15.1): the shade header is the donor's single
+         48dp row in both QQS and QS states (was the 3-row 120dp stack). -->
+    <dimen name="qs_header_height">48dp</dimen>
     <dimen name="qs_header_row_min_height">48dp</dimen>
 
     <dimen name="qs_header_non_clickable_element_height">24sp</dimen>

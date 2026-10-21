@@ -245,8 +245,16 @@ public class EdgeEffect {
                 attrs, com.android.internal.R.styleable.EdgeEffect);
         final int themeColor = a.getColor(
                 com.android.internal.R.styleable.EdgeEffect_colorEdgeEffect, 0xff666666);
-        mEdgeEffectType = Compatibility.isChangeEnabled(USE_STRETCH_EDGE_EFFECT_BY_DEFAULT)
-                ? TYPE_STRETCH : TYPE_GLOW;
+        // KitKat UI Project (14.1): 4.4 overscroll was the classic edge
+        // glow, not the Android-12 stretchy distortion. TYPE_GLOW is the
+        // direct descendant of the 4.4 engine (same pull/absorb/recede
+        // state machine, same mGlowAlpha/mGlowScaleY fields) rendered with
+        // a paint glow in the colorEdgeEffect (Holo blue via the P1 pin).
+        // Forced on regardless of the compat change id. The donor's
+        // overscroll_glow/overscroll_edge bitmap plume (4.4 draw path) is
+        // available in ~/kitkat-src if a later pass wants the soft gradient
+        // on top of this engine.
+        mEdgeEffectType = TYPE_GLOW;
         a.recycle();
 
         mPaint.setAntiAlias(true);

@@ -502,9 +502,11 @@
     <!-- Size of notification text (see TextAppearance.StatusBar.EventContent) -->
     <dimen name="notification_text_size">14sp</dimen>
     <!-- Size of notification text titles (see TextAppearance.StatusBar.EventContent.Title) -->
-    <dimen name="notification_title_text_size">14sp</dimen>
+    <!-- KitKat UI Project (12.6): donor 4.4 title size (was 14sp) -->
+    <dimen name="notification_title_text_size">18sp</dimen>
     <!-- Size of big notification text titles (see TextAppearance.StatusBar.EventContent.BigTitle) -->
-    <dimen name="notification_big_title_text_size">16sp</dimen>
+    <!-- KitKat UI Project (12.6): scaled with the 18sp donor title (was 16sp) -->
+    <dimen name="notification_big_title_text_size">20sp</dimen>
     <!-- Size of smaller notification text (see TextAppearance.StatusBar.EventContent.Line2, Info, Time) -->
     <dimen name="notification_subtext_size">12sp</dimen>
     <!-- Top padding for notifications in the standard layout. -->
