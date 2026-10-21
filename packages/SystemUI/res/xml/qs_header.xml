@@ -33,12 +33,24 @@
             />
     </Constraint>
 
+    <!-- KitKat UI Project: QS header user avatar at the start, before the clock -->
+    <Constraint
+        android:id="@+id/shade_header_user_avatar">
+        <Layout
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/clock"
+            app:layout_constraintBottom_toBottomOf="@id/clock"
+            />
+    </Constraint>
+
     <Constraint
         android:id="@+id/clock">
         <Layout
             android:layout_width="wrap_content"
             android:layout_height="@dimen/large_screen_shade_header_min_height"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/shade_header_user_avatar"
             app:layout_constraintTop_toBottomOf="@id/privacy_container"
             app:layout_constraintBottom_toBottomOf="@id/carrier_group"
         />
@@ -87,6 +99,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/date"
             app:layout_constraintBottom_toBottomOf="@id/date"
+            />
+    </Constraint>
+
+    <!-- KitKat UI Project: settings gear pinned to the top-right of the header -->
+    <Constraint
+        android:id="@+id/shade_header_settings_button">
+        <Layout
+            android:layout_width="@dimen/shade_header_settings_button_width"
+            android:layout_height="@dimen/large_screen_shade_header_min_height"
+            app:layout_constraintEnd_toStartOf="@id/privacy_container"
+            app:layout_constraintTop_toTopOf="parent"
             />
     </Constraint>
 

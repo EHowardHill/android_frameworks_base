@@ -21,12 +21,24 @@
     android:id="@+id/qqs_header_constraint"
 >
 
+    <!-- KitKat UI Project: QS header user avatar at the start, before the clock -->
+    <Constraint
+        android:id="@+id/shade_header_user_avatar">
+        <Layout
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintStart_toStartOf="@id/begin_guide"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/qqs_header_bottom_guideline"
+            />
+    </Constraint>
+
     <Constraint
         android:id="@+id/clock">
         <Layout
             android:layout_width="wrap_content"
             android:layout_height="@dimen/large_screen_shade_header_min_height"
-            app:layout_constraintStart_toStartOf="@id/begin_guide"
+            app:layout_constraintStart_toEndOf="@id/shade_header_user_avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/qqs_header_bottom_guideline"
             app:layout_constraintEnd_toStartOf="@id/date"
@@ -93,5 +105,18 @@
             app:layout_constraintBottom_toBottomOf="@id/qqs_header_bottom_guideline"
             app:layout_constraintHorizontal_bias="1"
         />
+    </Constraint>
+
+    <!-- KitKat UI Project: settings gear pinned to the top-right of the
+         header (the whole header is INVISIBLE in QQS on lockscreen, so the
+         gear is effectively lockscreen-gated too) -->
+    <Constraint
+        android:id="@+id/shade_header_settings_button">
+        <Layout
+            android:layout_width="@dimen/shade_header_settings_button_width"
+            android:layout_height="@dimen/large_screen_shade_header_min_height"
+            app:layout_constraintEnd_toStartOf="@id/privacy_container"
+            app:layout_constraintTop_toTopOf="parent"
+            />
     </Constraint>
 </ConstraintSet>

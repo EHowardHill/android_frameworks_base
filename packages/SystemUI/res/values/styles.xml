@@ -156,6 +156,17 @@
 
     <style name="TextAppearance.QS.Status.Carriers" />
 
+    <!-- KitKat UI Project: shade carrier label (status_bar_expanded.xml).
+         Deliberately does NOT chain into TextAppearance.QS.Status (whose
+         ?attr/onSurface only resolves once the fabricated monet overlay is
+         registered at boot; the shade root inflates eagerly at SystemUI
+         start, before that). Fixed 4.4 gray, 2013 Roboto via the sans-serif
+         repoint. -->
+    <style name="TextAppearance.KitKat.ShadeCarrier" parent="@android:style/TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">#ffb3b3b3</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="TextAppearance.QS.Status.Carriers.NoCarrierText">
         <item name="android:textColor">?attr/onSurfaceVariant</item>
     </style>
@@ -352,7 +363,10 @@
         <item name="darkIconTheme">@style/DualToneDarkTheme</item>
         <item name="wallpaperTextColor">@*android:color/primary_text_material_dark</item>
         <item name="wallpaperTextColorSecondary">@*android:color/secondary_text_material_dark</item>
-        <item name="wallpaperTextColorAccent">@color/material_dynamic_primary90</item>
+        <!-- KitKat UI Project: keyguard accent (lock icon ripple, UDFPS auth
+             ripple, swipe-up hints) pinned to Holo blue (was wallpaper-extracted
+             monet primary90), matching the ThemeOverlayController monet pin -->
+        <item name="wallpaperTextColorAccent">@*android:color/holo_blue_light</item>
         <item name="android:colorError">@*android:color/error_color_material_dark</item>
         <item name="*android:lockPatternStyle">@style/LockPatternViewStyle</item>
         <item name="lockPatternStyle">@style/LockPatternContainerStyle</item>
@@ -370,7 +384,8 @@
     <style name="Theme.SystemUI.LightWallpaper">
         <item name="wallpaperTextColor">@*android:color/primary_text_material_light</item>
         <item name="wallpaperTextColorSecondary">@*android:color/secondary_text_material_light</item>
-        <item name="wallpaperTextColorAccent">@color/material_dynamic_secondary40</item>
+        <!-- KitKat UI Project: see the dark theme pin above -->
+        <item name="wallpaperTextColorAccent">@*android:color/holo_blue_dark</item>
         <item name="android:colorError">@*android:color/error_color_material_light</item>
         <item name="shadowRadius">0</item>
 
@@ -429,12 +444,16 @@
         <item name="onSurfaceVariant">?androidprv:attr/materialColorOnSurfaceVariant</item>
         <item name="outline">?androidprv:attr/materialColorOutline</item>
 
-        <item name="shadeActive">@color/material_dynamic_primary90</item>
-        <item name="onShadeActive">@color/material_dynamic_primary10</item>
-        <item name="onShadeActiveVariant">@color/material_dynamic_primary30</item>
-        <item name="shadeInactive">@color/material_dynamic_neutral20</item>
-        <item name="onShadeInactive">@color/material_dynamic_neutral90</item>
-        <item name="onShadeInactiveVariant">@color/material_dynamic_neutral_variant80</item>
+        <!-- KitKat UI Project: flat 4.4 tile chrome - tiles stay dark in both
+             states (no monet primary90 light-fill for active), and the
+             active/inactive distinction moves to white vs gray text and
+             icon tint, as on the 4.4 quick settings panel. -->
+        <item name="shadeActive">#ff2d2d2d</item>
+        <item name="onShadeActive">#ffffffff</item>
+        <item name="onShadeActiveVariant">#ffb3b3b3</item>
+        <item name="shadeInactive">#ff2d2d2d</item>
+        <item name="onShadeInactive">#ffb3b3b3</item>
+        <item name="onShadeInactiveVariant">#ff808080</item>
         <item name="shadeDisabled">@color/shade_disabled</item>
         <item name="underSurface">@color/material_dynamic_neutral0</item>
         <item name="android:itemTextAppearance">@style/Control.MenuItem</item>
@@ -506,6 +525,12 @@
     <style name="Theme.SystemUI.Dialog.GlobalActions" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar.Fullscreen">
         <item name="android:colorError">@*android:color/error_color_material_dark</item>
         <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <!-- KitKat UI Project: 4.4-style recents panel - full screen, flat dark
+         (Theme.DeviceDefault is Holo-dark since the phase 1 rebase). -->
+    <style name="KitKatRecentsTheme" parent="@android:style/Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowBackground">#ee161616</item>
     </style>
 
     <style name="Theme.SystemUI.Dialog.GlobalActionsLite" parent="Theme.SystemUI.Dialog">
@@ -684,7 +709,8 @@
     <style
         name="TextAppearance.NotificationFooterButton"
         parent="@android:style/Widget.DeviceDefault.Button.Borderless">
-        <item name="android:textColor">?androidprv:attr/materialColorOnSurface</item>
+        <!-- KitKat UI Project: flat light-gray footer button text (was monet onSurface) -->
+        <item name="android:textColor">#ffeeeeee</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">14sp</item>
         <item name="android:minWidth">0dp</item>

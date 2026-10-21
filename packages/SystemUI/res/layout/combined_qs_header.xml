@@ -76,6 +76,20 @@ frame when animating QS <-> QQS transition
         app:barrierDirection="start"
         app:constraint_referenced_ids="shade_header_system_icons,privacy_container" />
 
+    <!-- KitKat UI Project: 4.4 QS panel header user avatar (circular crop via
+         outline). Positioned at the start, before the clock, in all three
+         constraint sets. -->
+    <ImageView
+        android:id="@+id/shade_header_user_avatar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="start|center_vertical"
+        android:scaleType="centerInside"
+        android:background="@drawable/kitkat_qs_user_avatar_circle"
+        android:clipToOutline="true"
+        android:contentDescription="@string/shade_header_user_avatar_description"
+        android:src="@drawable/kitkat_qs_user_avatar" />
+
     <com.android.systemui.statusbar.policy.Clock
         android:id="@+id/clock"
         android:layout_width="wrap_content"
@@ -165,5 +179,21 @@ frame when animating QS <-> QQS transition
             android:layout_height="match_parent" />
 
     </FrameLayout>
+
+    <!-- KitKat UI Project: settings gear pinned to the top-right of the shade
+         header (launches Settings, like the 4.4 status bar header). Pinned
+         start of the privacy chip so the two never overlap; carried into the
+         qqs_header/qs_header/large_screen_shade_header constraint sets so the
+         MotionLayout transitions leave it in place. -->
+    <ImageButton
+        android:id="@+id/shade_header_settings_button"
+        android:layout_width="@dimen/shade_header_settings_button_width"
+        android:layout_height="@dimen/large_screen_shade_header_min_height"
+        android:src="@drawable/ic_settings"
+        android:scaleType="center"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/shade_header_settings_button_description"
+        app:layout_constraintEnd_toStartOf="@id/privacy_container"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </com.android.systemui.util.NoRemeasureMotionLayout>

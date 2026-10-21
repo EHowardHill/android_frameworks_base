@@ -272,7 +272,14 @@ constructor(
             this and APPEARANCE_LOW_PROFILE_BARS != 0 -> StatusBarMode.LIGHTS_OUT_TRANSPARENT
             this and APPEARANCE_OPAQUE_STATUS_BARS != 0 -> StatusBarMode.OPAQUE
             this and APPEARANCE_SEMI_TRANSPARENT_STATUS_BARS != 0 -> StatusBarMode.SEMI_TRANSPARENT
-            else -> StatusBarMode.TRANSPARENT
+            // KitKat UI Project: 4.4 defaulted the status bar to opaque black
+            // (BarTransitions.MODE_OPAQUE, #ff000000); the edge-to-edge
+            // transparent bar is a modern default. Apps that explicitly request
+            // semi-transparent bars keep that behavior. Keyguard/AOD are
+            // unaffected: this mode drives only the status bar window's
+            // background view, which the fullscreen shade window covers
+            // whenever the keyguard is showing.
+            else -> StatusBarMode.OPAQUE
         }
     }
 

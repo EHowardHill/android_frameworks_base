@@ -93,4 +93,10 @@ public abstract class RecentsModule {
     @ClassKey(OverviewProxyRecentsImpl.class)
     public abstract RecentsImplementation bindOverviewProxyRecentsImpl(
             OverviewProxyRecentsImpl impl);
+
+    /** KitKat UI Project: 4.4-style recents served by SystemUI. */
+    @Binds
+    @IntoMap
+    @ClassKey(KitKatRecentsImpl.class)
+    public abstract RecentsImplementation bindKitKatRecentsImpl(KitKatRecentsImpl impl);
 }

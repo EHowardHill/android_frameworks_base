@@ -27,10 +27,14 @@ import android.graphics.Insets
 import android.os.Bundle
 import android.os.Trace
 import android.os.Trace.TRACE_TAG_APP
+import android.os.UserManager
 import android.provider.AlarmClock
+import android.provider.Settings
 import android.view.DisplayCutout
 import android.view.View
 import android.view.WindowInsets
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -68,6 +72,7 @@ import com.android.systemui.statusbar.policy.ConfigurationController
 import com.android.systemui.statusbar.policy.NextAlarmController
 import com.android.systemui.statusbar.policy.VariableDateView
 import com.android.systemui.statusbar.policy.VariableDateViewController
+import com.android.systemui.settings.UserTracker
 import com.android.systemui.util.ViewController
 import java.io.PrintWriter
 import javax.inject.Inject
@@ -102,6 +107,8 @@ constructor(
     private val nextAlarmController: NextAlarmController,
     private val activityStarter: ActivityStarter,
     private val statusOverlayHoverListenerFactory: StatusOverlayHoverListenerFactory,
+    // KitKat UI Project: 4.4 QS panel header user avatar
+    private val userTracker: UserTracker,
 ) : ViewController<View>(header), Dumpable {
 
     companion object {
@@ -138,6 +145,12 @@ constructor(
     private val mShadeCarrierGroup: ShadeCarrierGroup = header.requireViewById(R.id.carrier_group)
     private val systemIconsHoverContainer: View =
         header.requireViewById(R.id.hover_system_icons_container)
+    // KitKat UI Project: settings gear in the shade header (launches Settings)
+    private val settingsButton: ImageButton =
+        header.requireViewById(R.id.shade_header_settings_button)
+    // KitKat UI Project: 4.4 QS panel header user avatar
+    private val userAvatar: ImageView =
+        header.requireViewById(R.id.shade_header_user_avatar)
 
     private var roundedCorners = 0
     private var cutout: DisplayCutout? = null
@@ -306,6 +319,17 @@ constructor(
         variableDateViewControllerFactory.create(date as VariableDateView).init()
         batteryMeterViewController.init()
 
+        // KitKat UI Project: load the QS header user avatar (circular crop is
+        // handled by the view's outline background; fall back to the 4.4-style
+        // default avatar when the user has no custom icon).
+        val userManager =
+            userTracker.userContext.getSystemService(UserManager::class.java)
+        @Suppress("DEPRECATION")
+        val icon = userManager?.getUserIcon(userTracker.userId) as? android.graphics.drawable.Drawable
+        userAvatar.setImageDrawable(
+            icon ?: header.context.getDrawable(R.drawable.kitkat_qs_user_avatar)
+        )
+
         // battery settings same as in QS icons
         batteryMeterViewController.ignoreTunerUpdates()
 
@@ -342,6 +366,12 @@ constructor(
                 Intent(Intent.ACTION_POWER_USAGE_SUMMARY), 0
             )
         }
+        // KitKat UI Project: settings gear in the shade header
+        settingsButton.setOnClickListener {
+            activityStarter.postStartActivityDismissingKeyguard(
+                Intent(Settings.ACTION_SETTINGS), 0
+            )
+        }
 
         dumpManager.registerDumpable(this)
         configurationController.addCallback(configurationControllerListener)
@@ -355,6 +385,7 @@ constructor(
 
     override fun onViewDetached() {
         clock.setOnClickListener(null)
+        settingsButton.setOnClickListener(null)
         privacyIconsController.chipVisibilityListener = null
         dumpManager.unregisterDumpable(this::class.java.simpleName)
         configurationController.removeCallback(configurationControllerListener)

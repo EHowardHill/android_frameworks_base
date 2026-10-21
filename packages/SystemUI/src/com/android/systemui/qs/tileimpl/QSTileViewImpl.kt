@@ -177,8 +177,11 @@ open class QSTileViewImpl @JvmOverloads constructor(
                     "Theme.SystemUI.QuickSettings")
         }
         setId(generateViewId())
-        orientation = LinearLayout.HORIZONTAL
-        gravity = Gravity.CENTER_VERTICAL or Gravity.START
+        // KitKat UI Project (P10): 4.4 tile layout - vertical, icon centered
+        // above the centered label (donor quick_settings_tile_basic.xml),
+        // instead of the modern horizontal icon-start/label-end row.
+        orientation = LinearLayout.VERTICAL
+        gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         clipChildren = false
         clipToPadding = false
@@ -187,11 +190,16 @@ open class QSTileViewImpl @JvmOverloads constructor(
         setColor(getBackgroundColorForState(QSTile.State.DEFAULT_STATE))
 
         val padding = resources.getDimensionPixelSize(R.dimen.qs_tile_padding)
-        val startPadding = resources.getDimensionPixelSize(R.dimen.qs_tile_start_padding)
-        setPaddingRelative(startPadding, padding, padding, padding)
+        setPaddingRelative(padding, padding, padding, padding)
 
         val iconSize = resources.getDimensionPixelSize(R.dimen.qs_icon_size)
-        addView(icon, LayoutParams(iconSize, iconSize))
+        val iconAbove = resources.getDimensionPixelSize(R.dimen.kitkat_qs_tile_margin_above_icon)
+        val iconBelow = resources.getDimensionPixelSize(R.dimen.kitkat_qs_tile_margin_below_icon)
+        addView(icon, LayoutParams(iconSize, iconSize).apply {
+            gravity = Gravity.CENTER_HORIZONTAL
+            topMargin = iconAbove
+            bottomMargin = iconBelow
+        })
 
         createAndAddLabels()
         createAndAddSideView()
@@ -222,23 +230,18 @@ open class QSTileViewImpl @JvmOverloads constructor(
         FontSizeUtils.updateFontSize(secondaryLabel, R.dimen.qs_tile_text_size)
 
         val iconSize = context.resources.getDimensionPixelSize(R.dimen.qs_icon_size)
-        icon.layoutParams.apply {
+        val iconAbove = resources.getDimensionPixelSize(R.dimen.kitkat_qs_tile_margin_above_icon)
+        val iconBelow = resources.getDimensionPixelSize(R.dimen.kitkat_qs_tile_margin_below_icon)
+        icon.layoutParams = (icon.layoutParams as LayoutParams).apply {
             height = iconSize
             width = iconSize
+            gravity = Gravity.CENTER_HORIZONTAL
+            topMargin = iconAbove
+            bottomMargin = iconBelow
         }
 
         val padding = resources.getDimensionPixelSize(R.dimen.qs_tile_padding)
-        val startPadding = resources.getDimensionPixelSize(R.dimen.qs_tile_start_padding)
-        setPaddingRelative(startPadding, padding, padding, padding)
-
-        val labelMargin = resources.getDimensionPixelSize(R.dimen.qs_label_container_margin)
-        (labelContainer.layoutParams as MarginLayoutParams).apply {
-            marginStart = labelMargin
-        }
-
-        (sideView.layoutParams as MarginLayoutParams).apply {
-            marginStart = labelMargin
-        }
+        setPaddingRelative(padding, padding, padding, padding)
         (chevronView.layoutParams as MarginLayoutParams).apply {
             height = iconSize
             width = iconSize

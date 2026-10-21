@@ -20,16 +20,18 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:androidprv="http://schemas.android.com/apk/prv/res/android">
     <!-- Keyguard PIN pad styles -->
+    <!-- KitKat UI Project: bouncer/PIN text colors pinned to KitKat whites
+         (were wallpaper-extracted monet onSurface/onSurfaceVariant) -->
     <style name="Keyguard.TextView" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:textSize">@dimen/kg_status_line_font_size</item>
         <item name="android:fontFamily">@*android:string/config_bodyFontFamily</item>
-        <item name="android:textColor">?androidprv:attr/materialColorOnSurface</item>
+        <item name="android:textColor">#ffffffff</item>
     </style>
     <style name="Keyguard.Bouncer.PrimaryMessage" parent="Theme.SystemUI">
         <item name="android:textSize">18sp</item>
         <item name="android:lineHeight">24dp</item>
         <item name="android:fontFamily">@*android:string/config_headlineFontFamily</item>
-        <item name="android:textColor">?androidprv:attr/materialColorOnSurface</item>
+        <item name="android:textColor">#ffffffff</item>
         <item name="android:singleLine">true</item>
         <item name="android:textAlignment">center</item>
         <item name="android:ellipsize">marquee</item>
@@ -42,10 +44,10 @@
         <item name="android:textAlignment">center</item>
         <item name="android:fontFamily">@*android:string/config_bodyFontFamily</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textColor">?androidprv:attr/materialColorOnSurfaceVariant</item>
+        <item name="android:textColor">#ffb3b3b3</item>
     </style>
     <style name="Keyguard.TextView.EmergencyButton" parent="Theme.SystemUI">
-        <item name="android:textColor">?androidprv:attr/materialColorOnTertiaryFixed</item>
+        <item name="android:textColor">#ffffffff</item>
         <item name="android:textSize">16sp</item>
         <item name="android:background">@drawable/kg_emergency_button_background</item>
         <item name="android:fontFamily">@*android:string/config_headlineFontFamily</item>

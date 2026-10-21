@@ -536,6 +536,9 @@
     <dimen name="shade_header_system_icons_height">@dimen/large_screen_shade_header_min_height</dimen>
     <dimen name="hover_system_icons_container_padding_start">0dp</dimen>
     <dimen name="hover_system_icons_container_padding_end">0dp</dimen>
+
+    <!-- KitKat UI Project: settings gear in the shade header -->
+    <dimen name="shade_header_settings_button_width">48dp</dimen>
     <dimen name="hover_system_icons_container_padding_top">0dp</dimen>
     <dimen name="hover_system_icons_container_padding_bottom">0dp</dimen>
 
@@ -644,8 +647,10 @@
     <!-- The size of the gesture span needed to activate the "pull" notification expansion -->
     <dimen name="pull_span_min">25dp</dimen>
 
-    <dimen name="qs_corner_radius">28dp</dimen>
-    <dimen name="qs_tile_height">80dp</dimen>
+    <!-- KitKat UI Project: square QS chrome (was 28dp pills) -->
+    <dimen name="qs_corner_radius">2dp</dimen>
+    <!-- KitKat UI Project (P10): 4.4 QS cell height (donor quick_settings_cell_height) -->
+    <dimen name="qs_tile_height">110dp</dimen>
     <dimen name="qs_tile_margin_horizontal">8dp</dimen>
     <dimen name="qs_tile_margin_vertical">@dimen/qs_tile_margin_horizontal</dimen>
     <dimen name="qs_tile_margin_top_bottom">4dp</dimen>
@@ -672,7 +677,12 @@
     <dimen name="qs_tiles_page_horizontal_margin">@dimen/notification_side_paddings</dimen>
 
     <dimen name="qs_customize_internal_side_paddings">8dp</dimen>
-    <dimen name="qs_icon_size">20dp</dimen>
+    <!-- KitKat UI Project (P10): 4.4 tile icon size (donor qs_tile_icon_size) -->
+    <dimen name="qs_icon_size">32dp</dimen>
+    <!-- KitKat UI Project (P10): 4.4 tile icon margins (donor
+         qs_tile_margin_above_icon / qs_tile_margin_below_icon) -->
+    <dimen name="kitkat_qs_tile_margin_above_icon">27dp</dimen>
+    <dimen name="kitkat_qs_tile_margin_below_icon">17dp</dimen>
     <dimen name="qs_side_view_size">28dp</dimen>
     <dimen name="qs_label_container_margin">10dp</dimen>
     <dimen name="qs_quick_tile_size">60dp</dimen>
@@ -1025,7 +1035,8 @@
     <!-- Power Menu Lite -->
     <dimen name="global_actions_button_size">96dp</dimen>
     <dimen name="global_actions_button_padding">38dp</dimen>
-    <dimen name="global_actions_corner_radius">28dp</dimen>
+    <!-- KitKat UI Project: flat KitKat power menu (was 28dp pill) -->
+    <dimen name="global_actions_corner_radius">2dp</dimen>
     <dimen name="global_actions_lite_padding">24dp</dimen>
     <dimen name="global_actions_info_margin">32dp</dimen>
 

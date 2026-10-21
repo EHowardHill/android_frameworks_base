@@ -29,8 +29,12 @@
 
     <style name="TextAppearance.CategoryTitle.SettingsLib"
            parent="@android:style/TextAppearance.DeviceDefault.Medium">
+        <!-- KitKat UI Project: 4.4-style Settings category headers - bold
+             small-caps in Holo blue -->
         <item name="android:textColor">@color/settingslib_text_color_preference_category_title</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="Switch.SettingsLib" parent="@android:style/Widget.Material.CompoundButton.Switch">

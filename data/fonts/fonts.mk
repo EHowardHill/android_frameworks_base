@@ -17,5 +17,19 @@
 PRODUCT_PACKAGES := \
     DroidSansMono.ttf \
     AndroidClock.ttf \
+    AndroidEmoji.ttf \
+    Roboto2013-Regular.ttf \
+    Roboto2013-Bold.ttf \
+    Roboto2013-Italic.ttf \
+    Roboto2013-BoldItalic.ttf \
+    Roboto2013-Light.ttf \
+    Roboto2013-LightItalic.ttf \
+    Roboto2013-Thin.ttf \
+    Roboto2013-ThinItalic.ttf \
+    Roboto2013-Condensed-Regular.ttf \
+    Roboto2013-Condensed-Bold.ttf \
+    Roboto2013-Condensed-Italic.ttf \
+    Roboto2013-Condensed-BoldItalic.ttf \
+    NotoColorEmoji2013.ttf \
     font_fallback.xml \
     fonts.xml

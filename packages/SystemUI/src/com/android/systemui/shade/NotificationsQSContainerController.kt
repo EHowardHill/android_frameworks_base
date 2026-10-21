@@ -29,6 +29,7 @@ import androidx.constraintlayout.widget.ConstraintSet.TOP
 import androidx.lifecycle.lifecycleScope
 import com.android.systemui.Flags.centralizedStatusBarHeightFix
 import com.android.systemui.Flags.migrateClocksToBlueprint
+import com.android.keyguard.CarrierTextManager
 import com.android.systemui.dagger.SysUISingleton
 import com.android.systemui.dagger.qualifiers.Main
 import com.android.systemui.fragments.FragmentService
@@ -36,11 +37,14 @@ import com.android.systemui.lifecycle.repeatWhenAttached
 import com.android.systemui.navigationbar.NavigationModeController
 import com.android.systemui.plugins.qs.QS
 import com.android.systemui.plugins.qs.QSContainerController
+import com.android.systemui.plugins.statusbar.StatusBarStateController
 import com.android.systemui.recents.OverviewProxyService
 import com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
 import com.android.systemui.res.R
+import com.android.systemui.shade.carrier.ShadeCarrierTextController
 import com.android.systemui.shade.domain.interactor.ShadeInteractor
 import com.android.systemui.shared.system.QuickStepContract
+import com.android.systemui.statusbar.StatusBarState
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayoutController
 import com.android.systemui.statusbar.policy.SplitShadeStateController
 import com.android.systemui.util.LargeScreenUtils
@@ -68,7 +72,27 @@ class NotificationsQSContainerController @Inject constructor(
     notificationStackScrollLayoutController: NotificationStackScrollLayoutController,
     private val splitShadeStateController: SplitShadeStateController,
     private val largeScreenHeaderHelperLazy: Lazy<LargeScreenHeaderHelper>,
+    private val carrierTextManagerBuilder: CarrierTextManager.Builder,
+    private val statusBarStateController: StatusBarStateController,
 ) : ViewController<NotificationsQuickSettingsContainer>(view), QSContainerController {
+
+    // KitKat UI Project: carrier label at the bottom of the shade
+    // (status_bar_expanded.xml, shade_carrier_text).
+    private lateinit var shadeCarrierTextController: ShadeCarrierTextController
+
+    // KitKat UI Project: shade drag handle (status_bar_expanded.xml,
+    // shade_bottom_handle), shown in the unlocked shade only.
+    private val shadeBottomHandle: View? by lazy {
+        mView.findViewById<View>(R.id.shade_bottom_handle)
+    }
+
+    private val shadeBottomHandleStateListener =
+        object : StatusBarStateController.StateListener {
+            override fun onStateChanged(newState: Int) {
+                shadeBottomHandle?.visibility =
+                if (newState == StatusBarState.SHADE) View.VISIBLE else View.GONE
+            }
+        }
 
     private var splitShadeEnabled = false
     private var isQSDetailShowing = false
@@ -130,11 +154,19 @@ class NotificationsQSContainerController @Inject constructor(
         isGestureNavigation = QuickStepContract.isGesturalMode(currentMode)
 
         mView.setStackScroller(notificationStackScrollLayoutController.getView())
+
+        shadeCarrierTextController = ShadeCarrierTextController(
+            mView.findViewById(R.id.kitkat_shade_carrier_text),
+            carrierTextManagerBuilder,
+            statusBarStateController)
+        shadeCarrierTextController.init()
     }
 
     public override fun onViewAttached() {
         updateResources()
         overviewProxyService.addCallback(taskbarVisibilityListener)
+        statusBarStateController.addCallback(shadeBottomHandleStateListener)
+        shadeBottomHandleStateListener.onStateChanged(statusBarStateController.getState())
         mView.setInsetsChangedListener(delayedInsetSetter)
         mView.setQSFragmentAttachedListener { qs: QS -> qs.setContainerController(this) }
         mView.setConfigurationChangedListener { updateResources() }
@@ -143,6 +175,7 @@ class NotificationsQSContainerController @Inject constructor(
 
     override fun onViewDetached() {
         overviewProxyService.removeCallback(taskbarVisibilityListener)
+        statusBarStateController.removeCallback(shadeBottomHandleStateListener)
         mView.removeOnInsetsChangedListener()
         mView.removeQSFragmentAttachedListener()
         mView.setConfigurationChangedListener(null)

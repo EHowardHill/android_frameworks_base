@@ -39,6 +39,10 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.graphics.RectF;
 import android.view.HapticFeedbackConstants;
 import android.view.InputDevice;
 import android.view.KeyCharacterMap;
@@ -90,6 +94,18 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
     private float mDarkIntensity;
     private boolean mHasOvalBg = false;
     private NavBarButtonClickLogger mNavBarButtonClickLogger;
+
+    // KitKat UI Project (P9): the 4.4 press glow, ported from
+    // android-4.4.4_r1 frameworks/base SystemUI KeyButtonView. Draws the
+    // ic_sysbar_highlight glow behind the icon, animating alpha/scale on
+    // press (GLOW_MAX_SCALE_FACTOR), in place of the modern ripple.
+    private static final float GLOW_MAX_SCALE_FACTOR = 1.8f;
+    private final Drawable mGlowBG;
+    private final int mGlowWidth;
+    private final int mGlowHeight;
+    private float mGlowAlpha = 0f;
+    private float mGlowScale = 1f;
+    private AnimatorSet mGlowAnim;
 
     @VisibleForTesting
     public enum NavBarButtonEvent implements UiEventLogger.UiEventEnum {
@@ -184,12 +200,105 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
         setClickable(true);
         mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
+        // KitKat UI Project (P9): load the 4.4 glow highlight and drop the
+        // modern ripple background in its favor.
+        mGlowBG = context.getDrawable(R.drawable.ic_sysbar_highlight);
+        if (mGlowBG != null) {
+            mGlowWidth = mGlowBG.getIntrinsicWidth();
+            mGlowHeight = mGlowBG.getIntrinsicHeight();
+        } else {
+            mGlowWidth = 0;
+            mGlowHeight = 0;
+        }
         mRipple = new KeyButtonRipple(context, this, R.dimen.key_button_ripple_max_width);
         mOverviewProxyService = Dependency.get(OverviewProxyService.class);
         mInputManagerGlobal = manager;
-        setBackground(mRipple);
+        setBackground(null);
         setWillNotDraw(false);
         forceHasOverlappingRendering(false);
+    }
+
+    // KitKat UI Project (P9): the 4.4 glow drawing, ported from 4.4
+    // KeyButtonView.onDraw (draw the glow scaled/alpha'd behind the icon).
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (mGlowBG != null) {
+            canvas.save();
+            final int w = getWidth();
+            final int h = getHeight();
+            final float aspect = (float) mGlowWidth / mGlowHeight;
+            final int drawW = (int) (h * aspect);
+            final int drawH = h;
+            final int margin = (drawW - w) / 2;
+            canvas.scale(mGlowScale, mGlowScale, w * 0.5f, h * 0.5f);
+            mGlowBG.setBounds(-margin, 0, drawW - margin, drawH);
+            mGlowBG.setAlpha((int) (mGlowAlpha * 255));
+            mGlowBG.draw(canvas);
+            canvas.restore();
+        }
+        super.onDraw(canvas);
+    }
+
+    private void invalidateGlow() {
+        // the glow can extend beyond our bounds when scaled up
+        final float rx = (getWidth() * (GLOW_MAX_SCALE_FACTOR - 1.0f)) / 2.0f + 1.0f;
+        final float ry = (getHeight() * (GLOW_MAX_SCALE_FACTOR - 1.0f)) / 2.0f + 1.0f;
+        if (getParent() instanceof View parent) {
+            parent.invalidate();
+        }
+        invalidate((int) -rx, (int) -ry, (int) (getWidth() + rx), (int) (getHeight() + ry));
+    }
+
+    @Override
+    public void setPressed(boolean pressed) {
+        // KitKat UI Project (P9): 4.4 press glow animation (ported).
+        if (mGlowBG != null) {
+            if (pressed != isPressed()) {
+                if (mGlowAnim != null && mGlowAnim.isRunning()) {
+                    mGlowAnim.cancel();
+                }
+                final AnimatorSet as = mGlowAnim = new AnimatorSet();
+                if (pressed) {
+                    if (mGlowScale < GLOW_MAX_SCALE_FACTOR) mGlowScale = GLOW_MAX_SCALE_FACTOR;
+                    if (mGlowAlpha < 1f) mGlowAlpha = 1f;
+                    as.playTogether(
+                            ObjectAnimator.ofPropertyValuesHolder(this,
+                                    PropertyValuesHolder.ofFloat("glowAlpha", 1f)),
+                            ObjectAnimator.ofPropertyValuesHolder(this,
+                                    PropertyValuesHolder.ofFloat("glowScale",
+                                            GLOW_MAX_SCALE_FACTOR)));
+                    as.setDuration(50);
+                } else {
+                    as.playTogether(
+                            ObjectAnimator.ofPropertyValuesHolder(this,
+                                    PropertyValuesHolder.ofFloat("glowAlpha", 0f)),
+                            ObjectAnimator.ofPropertyValuesHolder(this,
+                                    PropertyValuesHolder.ofFloat("glowScale", 1f)));
+                    as.setDuration(500);
+                }
+                as.start();
+            }
+        }
+        super.setPressed(pressed);
+    }
+
+    // Property accessors for the glow animators (PropertyValuesHolder lookups).
+    public void setGlowAlpha(float alpha) {
+        mGlowAlpha = alpha;
+        invalidateGlow();
+    }
+
+    public float getGlowAlpha() {
+        return mGlowAlpha;
+    }
+
+    public void setGlowScale(float scale) {
+        mGlowScale = scale;
+        invalidateGlow();
+    }
+
+    public float getGlowScale() {
+        return mGlowScale;
     }
 
     @Override

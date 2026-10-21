@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- KitKat UI Project: Holo checkbox, unchecked state (square outline). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M4,4 h16 a2,2 0 0 1 2,2 v16 a2,2 0 0 1 -2,2 h-16 a2,2 0 0 1 -2,-2 v-16 a2,2 0 0 1 2,-2 z"
+        android:fillColor="#00000000"
+        android:strokeColor="#ff9a9a9a"
+        android:strokeWidth="1.5" />
+</vector>

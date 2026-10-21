@@ -13,23 +13,25 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+
+<!-- KitKat UI Project: 4.4-style power menu row - full-width row, icon at
+     left, label at right, flat chrome; press feedback is a Holo blue fill
+     (see global_actions_lite_button). -->
 <com.android.systemui.globalactions.GlobalActionsItem
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_weight="1"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:layout_gravity="center"
-    android:orientation="vertical"
-    android:stateListAnimator="@anim/control_state_list_animator"
+    android:gravity="center_vertical"
+    android:layout_gravity="center_vertical"
+    android:orientation="horizontal"
+    android:minHeight="48dp"
     android:clipChildren="false"
     android:clipToPadding="false">
         <ImageView
             android:id="@*android:id/icon"
-            android:layout_width="@dimen/global_actions_button_size"
-            android:layout_height="@dimen/global_actions_button_size"
-            android:layout_marginBottom="@dimen/global_actions_grid_container_bottom_margin"
-            android:padding="@dimen/global_actions_button_padding"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
             android:scaleType="centerInside"
             android:tint="@color/global_actions_lite_text"
             android:background="@drawable/global_actions_lite_button"
@@ -41,8 +43,8 @@
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
-            android:textSize="14sp"
-            android:gravity="center"
+            android:textSize="16sp"
+            android:gravity="start|center_vertical"
             android:textColor="@color/global_actions_lite_text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 </com.android.systemui.globalactions.GlobalActionsItem>

@@ -23,7 +23,9 @@
     <!-- Component to be used as the recents implementation.  Must implement the
      RecentsImplementation interface.  This name is in the ComponentName flattened format
      (package/class)  -->
-    <string name="config_recentsComponent" translatable="false">com.android.systemui.recents.OverviewProxyRecentsImpl</string>
+    <!-- KitKat UI Project: recents served by SystemUI's 4.4-style panel
+         (the KitKat launcher has no Quickstep overview proxy). -->
+    <string name="config_recentsComponent" translatable="false">com.android.systemui.recents.KitKatRecentsImpl</string>
 
     <!-- Whether or not we show the number in the bar. -->
     <bool name="config_statusBarShowNumber">false</bool>
@@ -65,7 +67,9 @@
     <integer name="quick_qs_panel_max_rows">2</integer>
 
     <!-- The number of columns in the QuickSettings -->
-    <integer name="quick_settings_num_columns">2</integer>
+    <!-- KitKat UI Project (P10): 4.4 phone QS was 3 columns (donor
+         quick_settings_num_columns) -->
+    <integer name="quick_settings_num_columns">3</integer>
 
     <!-- The number of rows in the QuickSettings -->
     <integer name="quick_settings_max_rows">4</integer>
@@ -325,7 +329,10 @@
     </string-array>
 
     <!-- Nav bar button default ordering/layout -->
-    <string name="config_navBarLayout" translatable="false">left[.5W],back[1WC];home;recent[1WC],right[.5W]</string>
+    <!-- KitKat UI Project (P9): 4.4 geometry - fixed 80dp-wide buttons
+         (donor navigation_key_width), distributed start/center/end with
+         flexible side spacers, instead of weight-stretched buttons. -->
+    <string name="config_navBarLayout" translatable="false">left[.5W],back[80AC];home[80AC];recent[80AC],right[.5W]</string>
     <string name="config_navBarLayoutQuickstep" translatable="false">back[1.7WC];home;menu_ime[1.7WC]</string>
     <string name="config_navBarLayoutHandle" translatable="false">back[70AC];home_handle;ime_switcher[70AC]</string>
 

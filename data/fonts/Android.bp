@@ -44,6 +44,26 @@ prebuilt_font {
     src: "AndroidClock.ttf",
 }
 
+// KitKat UI Project (Phase 8): 4.4 supplemental emoji font, from AOSP
+// android-4.4.4_r1 (19 glyphs: 0x25AB, 0x25FB-FE, 0x2600, 0x26AA-AB).
+// Registered in font_fallback.xml ahead of NotoColorEmoji so the covered
+// codepoints render as 2013 glyphs.
+prebuilt_font {
+    name: "AndroidEmoji.ttf",
+    src: "AndroidEmoji.ttf",
+}
+
+// KitKat UI Project (P10): the full 2013 blob emoji font (817 codepoints,
+// CBDT/CBLC color bitmaps), from external/noto-fonts at android-4.4.4_r1.
+// Registered AHEAD of NotoColorEmoji in the font fallback chain: every
+// codepoint that existed in KitKat renders its 2013 blob glyph, and
+// everything added since (new emoji, ZWJ sequences) falls through to the
+// modern font.
+prebuilt_font {
+    name: "NotoColorEmoji2013.ttf",
+    src: "NotoColorEmoji2013.ttf",
+}
+
 // KitKat UI Project (Phase 1): 2013 Roboto family, from AOSP android-4.4.4_r1.
 // Installed under distinct names to avoid colliding with the variable-font
 // Roboto-Regular.ttf provided by external/roboto-fonts, which stays installed

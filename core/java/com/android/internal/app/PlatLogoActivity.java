@@ -32,6 +32,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CombinedVibration;
@@ -230,7 +231,11 @@ public class PlatLogoActivity extends Activity {
         lp.gravity = Gravity.CENTER;
 
         mLogo = new ImageView(this);
-        mLogo.setImageResource(R.drawable.platlogo);
+        // KitKat UI Project: 4.4-style easter egg logo (red biscuit + KIT KAT
+        // wordmark) instead of the platform dessert mark; the starfield warp
+        // and the next-stage launch (com.android.internal.category.PLATLOGO)
+        // are kept unchanged.
+        mLogo.setImageDrawable(new KitKatLogoDrawable());
         mLogo.setOnTouchListener(mTouchListener);
         mLogo.requestFocus();
         mLayout.addView(mLogo, lp);
@@ -390,6 +395,55 @@ public class PlatLogoActivity extends Activity {
     public void onStop() {
         syncTouchPressure();
         super.onStop();
+    }
+
+    /**
+     * KitKat UI Project: the 4.4 easter egg logo - a red rounded "biscuit"
+     * with the white KIT KAT wordmark, drawn programmatically (no donor asset).
+     */
+    private static class KitKatLogoDrawable extends Drawable {
+        private static final int BISCUIT_RED = 0xFFD31027;
+        private static final int CREAM_WHITE = 0xFFFFFFFF;
+        private static final String WORDMARK = "KIT KAT";
+
+        private final Paint mBiscuitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final RectF mBiscuit = new RectF();
+
+        KitKatLogoDrawable() {
+            mBiscuitPaint.setStyle(Paint.Style.FILL);
+            mBiscuitPaint.setColor(BISCUIT_RED);
+            mTextPaint.setColor(CREAM_WHITE);
+            mTextPaint.setFakeBoldText(true);
+            mTextPaint.setTextSkewX(-0.25f); // KitKat-style slant
+            mTextPaint.setTextAlign(Paint.Align.CENTER);
+        }
+
+        @Override
+        public void draw(@NonNull Canvas canvas) {
+            final Rect bounds = getBounds();
+            final float w = bounds.width();
+            final float h = bounds.height();
+            mBiscuit.set(0, h * 0.28f, w, h * 0.72f);
+            final float radius = mBiscuit.height() / 2;
+            canvas.drawRoundRect(mBiscuit, radius, radius, mBiscuitPaint);
+            mTextPaint.setTextSize(mBiscuit.height() * 0.42f);
+            canvas.drawText(WORDMARK, mBiscuit.centerX(), mBiscuit.centerY()
+                    - (mTextPaint.ascent() + mTextPaint.descent()) / 2, mTextPaint);
+        }
+
+        @Override
+        public void setAlpha(int alpha) {
+        }
+
+        @Override
+        public void setColorFilter(@Nullable ColorFilter colorFilter) {
+        }
+
+        @Override
+        public int getOpacity() {
+            return PixelFormat.TRANSLUCENT;
+        }
     }
 
     private static class Starfield extends Drawable {

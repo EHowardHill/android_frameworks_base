@@ -74,6 +74,7 @@ import android.os.Trace;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.service.dreams.IDreamManager;
+import android.service.notification.NotificationListenerService.RankingMap;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.util.ArraySet;
@@ -185,6 +186,7 @@ import com.android.systemui.shared.recents.utilities.Utilities;
 import com.android.systemui.statusbar.AutoHideUiElement;
 import com.android.systemui.statusbar.CircleReveal;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.NotificationListener;
 import com.android.systemui.statusbar.GestureRecorder;
 import com.android.systemui.statusbar.KeyboardShortcutListSearch;
 import com.android.systemui.statusbar.KeyboardShortcuts;
@@ -451,6 +453,9 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
 
     private final NotificationGutsManager mGutsManager;
     private final ShadeExpansionStateManager mShadeExpansionStateManager;
+    // KitKat UI Project: the 4.4 ticker
+    private final NotificationListener mNotificationListener;
+    private Ticker mTicker;
     private final KeyguardViewMediator mKeyguardViewMediator;
     private final BrightnessSliderController.Factory mBrightnessSliderFactory;
     private final FeatureFlags mFeatureFlags;
@@ -608,6 +613,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
     @Inject
     public CentralSurfacesImpl(
             Context context,
+            NotificationListener notificationListener,
             NotificationsController notificationsController,
             FragmentService fragmentService,
             LightBarController lightBarController,
@@ -732,6 +738,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
         mFalsingManager = falsingManager;
         mBroadcastDispatcher = broadcastDispatcher;
         mGutsManager = notificationGutsManager;
+        mNotificationListener = notificationListener;
         mShadeExpansionStateManager = shadeExpansionStateManager;
         mKeyguardViewMediator = keyguardViewMediator;
         mDisplayMetrics = displayMetrics;
@@ -1216,6 +1223,53 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
         mStatusBarInitializer.setStatusBarViewUpdatedListener(
                 (statusBarView, statusBarViewController, statusBarTransitions) -> {
                     mStatusBarView = statusBarView;
+                    // KitKat UI Project: wire the 4.4 ticker - a notification
+                    // posted with the shade closed scrolls its icon, title and
+                    // text through the status bar (see Ticker).
+                    if (mTicker == null) {
+                        mTicker = new Ticker(statusBarView.getContext(), statusBarView,
+                                mShadeExpansionStateManager, () -> mDeviceInteractive);
+                        mNotificationListener.addNotificationHandler(
+                                new com.android.systemui.statusbar.NotificationListener
+                                        .NotificationHandler() {
+                                    @Override
+                                    public void onNotificationPosted(
+                                            StatusBarNotification sbn,
+                                            RankingMap rankingMap) {
+                                        mTicker.add(sbn);
+                                    }
+
+                                    @Override
+                                    public void onNotificationRemoved(
+                                            StatusBarNotification sbn,
+                                            RankingMap rankingMap) {
+                                        // KitKat UI Project (P3): stop a
+                                        // running tick when its notification
+                                        // is removed.
+                                        if (mTicker != null) {
+                                            mTicker.remove(sbn);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onNotificationRemoved(
+                                            StatusBarNotification sbn,
+                                            RankingMap rankingMap, int reason) {
+                                        if (mTicker != null) {
+                                            mTicker.remove(sbn);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onNotificationRankingUpdate(
+                                            RankingMap rankingMap) {
+                                    }
+
+                                    @Override
+                                    public void onNotificationsInitialized() {
+                                    }
+                                });
+                    }
                     mPhoneStatusBarViewController = statusBarViewController;
                     mStatusBarTransitions = statusBarTransitions;
                     getNotificationShadeWindowViewController()

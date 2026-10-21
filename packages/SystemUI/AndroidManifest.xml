@@ -494,6 +494,14 @@
                 android:permission="android.permission.BIND_WALLPAPER"
                 android:exported="true" />
 
+        <!-- KitKat UI Project: 4.4-style recents panel -->
+        <activity android:name=".recents.KitKatRecentsActivity"
+                  android:theme="@style/KitKatRecentsTheme"
+                  android:exported="false"
+                  android:excludeFromRecents="true"
+                  android:taskAffinity=""
+                  android:finishOnTaskLaunch="true" />
+
         <activity android:name=".tuner.TunerActivity"
                   android:enabled="false"
                   android:icon="@drawable/tuner"

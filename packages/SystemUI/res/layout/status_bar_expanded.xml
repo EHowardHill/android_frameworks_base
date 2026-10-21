@@ -91,6 +91,40 @@
 
         <include layout="@layout/photo_preview_overlay" />
 
+        <!-- KitKat UI Project: shade drag handle (4.4-style grabber bar), kept
+             above the carrier label and shown only in the unlocked shade
+             (gated in NotificationsQSContainerController; shade dragging
+             itself works anywhere on the panel, as in 4.4). -->
+        <View
+            android:id="@+id/shade_bottom_handle"
+            android:layout_width="36dp"
+            android:layout_height="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/shade_bottom_handle"
+            systemui:layout_constraintStart_toStartOf="parent"
+            systemui:layout_constraintEnd_toEndOf="parent"
+            systemui:layout_constraintBottom_toTopOf="@id/kitkat_shade_carrier_text"
+            android:visibility="gone" />
+
+        <!-- KitKat UI Project: carrier label pinned to the bottom of the shade.
+             Driven by ShadeCarrierTextController; only visible in the unlocked
+             shade (the keyguard carries its own carrier text). -->
+        <com.android.keyguard.CarrierText
+            android:id="@+id/kitkat_shade_carrier_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:textDirection="locale"
+            android:textAppearance="@style/TextAppearance.KitKat.ShadeCarrier"
+            systemui:showMissingSim="true"
+            systemui:showAirplaneMode="true"
+            systemui:debugLocation="Shade"
+            systemui:layout_constraintStart_toStartOf="parent"
+            systemui:layout_constraintEnd_toEndOf="parent"
+            systemui:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone" />
+
         <include
             layout="@layout/keyguard_status_bar"
             android:visibility="invisible" />

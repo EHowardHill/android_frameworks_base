@@ -33,10 +33,13 @@
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
+    <!-- KitKat UI Project: About-page (entity header) 4.4 look - large bold
+         device name over dark summary text, cascading from the Holo rebase. -->
     <style name="TextAppearance.EntityHeaderTitle"
            parent="@android:style/TextAppearance.DeviceDefault.WindowTitle">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextAppearance.EntityHeaderSummary"

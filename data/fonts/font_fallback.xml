@@ -819,6 +819,18 @@
               postScriptName="NotoSerifCJKjp-Regular">NotoSerifCJK-Regular.ttc
         </font>
     </family>
+    <!-- KitKat UI Project (Phase 8): 4.4 supplemental emoji glyphs, ahead of
+         NotoColorEmoji so the covered codepoints render as 2013 glyphs. -->
+    <family lang="und-Zsye">
+        <font weight="400" style="normal">AndroidEmoji.ttf</font>
+    </family>
+    <!-- KitKat UI Project (P10): the full 2013 blob emoji font
+         (external/noto-fonts @ android-4.4.4_r1), AHEAD of NotoColorEmoji so
+         every KitKat-era codepoint renders its 2013 glyph; newer emoji and
+         sequences fall through to the modern font. -->
+    <family lang="und-Zsye">
+        <font weight="400" style="normal">NotoColorEmoji2013.ttf</font>
+    </family>
     <family lang="und-Zsye">
         <font weight="400" style="normal">NotoColorEmoji.ttf</font>
     </family>

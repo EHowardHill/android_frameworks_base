@@ -16,7 +16,19 @@
 * limitations under the License.
 */
 -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-  <solid android:color="@color/global_actions_lite_button_background"/>
-</shape>
+<!-- KitKat UI Project: transparent at rest (4.4 rows carry no chrome);
+     Holo blue fill on press. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/global_actions_lite_button_background_focused" />
+            <corners android:radius="2dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/global_actions_lite_button_background" />
+            <corners android:radius="2dp" />
+        </shape>
+    </item>
+</selector>

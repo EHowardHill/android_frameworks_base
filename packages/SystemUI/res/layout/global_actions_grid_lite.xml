@@ -47,6 +47,7 @@
         android:layoutDirection="ltr"
         android:clipChildren="false"
         android:clipToPadding="false">
+      <!-- KitKat UI Project: single-column list (was a 2-wide icon grid) -->
       <androidx.constraintlayout.helper.widget.Flow
           android:id="@+id/list_flow"
           android:layout_width="match_parent"
@@ -55,7 +56,7 @@
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintTop_toTopOf="parent"
           app:flow_wrapMode="chain"
-          app:flow_maxElementsWrap="2"
+          app:flow_maxElementsWrap="1"
           app:flow_horizontalGap="@dimen/global_actions_lite_padding"
           app:flow_verticalGap="@dimen/global_actions_lite_padding"
           app:flow_horizontalStyle="packed"
