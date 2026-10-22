@@ -16,6 +16,7 @@
   -->
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="@dimen/qs_corner_radius" />
+    <!-- KitKat UI P20.7: donor tiles were square. -->
+    <corners android:radius="0dp" />
     <solid android:color="#FFFFFF" />
 </shape>

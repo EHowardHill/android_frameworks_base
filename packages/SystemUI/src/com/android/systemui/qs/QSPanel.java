@@ -221,18 +221,20 @@ public class QSPanel extends LinearLayout {
      * Used to add the brightness slider after construction.
      */
     public void setBrightnessView(@NonNull View view) {
+        // KitKat UI Project (P20.8): the donor phone QS had NO inline
+        // brightness slider above the grid - brightness is a TILE that
+        // opens the brightness dialog (KitKatBrightnessTile). Do not attach
+        // the slider view to the panel; keep the reference plumbing intact
+        // (QSPanelController/mirrors still function) so re-enabling is a
+        // one-line revert.
+        view.setVisibility(View.GONE);
         if (mBrightnessView != null) {
             removeView(mBrightnessView);
             mChildrenLayoutTop.remove(mBrightnessView);
             mMovableContentStartIndex--;
         }
-        addView(view, 0);
-        mBrightnessView = view;
+        mBrightnessView = null;
         mAutoBrightnessView = view.findViewById(R.id.brightness_icon);
-
-        setBrightnessViewMargin();
-
-        mMovableContentStartIndex++;
     }
 
     private void setBrightnessViewMargin() {

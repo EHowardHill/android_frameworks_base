@@ -458,7 +458,12 @@ class NotificationShadeDepthController @Inject constructor(
      */
     private fun shouldApplyShadeBlur(): Boolean {
         val state = statusBarStateController.state
-        return (state == StatusBarState.SHADE || state == StatusBarState.SHADE_LOCKED) &&
+        // KitKat UI Project (P20.2): 4.4 never blurred behind the shade - the
+        // opaque panel rode the height animation over an unobscured screen.
+        // The modern blur makes the drag read as a fade; force it off in the
+        // unlocked SHADE state (the only state the donor shade existed in).
+        // Keyguard/bouncer/AOD states keep the stock blur pipeline untouched.
+        return false && (state == StatusBarState.SHADE || state == StatusBarState.SHADE_LOCKED) &&
                 !keyguardStateController.isKeyguardFadingAway
     }
 

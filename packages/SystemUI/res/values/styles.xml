@@ -33,18 +33,21 @@
         <item name="android:textColor">?android:attr/textColorTertiary</item>
     </style>
 
+    <!-- KitKat UI P20.9: donor TextAppearance.StatusBar.Expanded.Clock/.Date
+         (status_bar_expanded_header.xml values) - 32dp sans-serif-light
+         white clock, 12dp #cccccc all-caps date. -->
     <style name="TextAppearance.StatusBar.Expanded.Clock">
-        <item name="android:textSize">@dimen/qs_time_expanded_size</item>
-        <item name="android:fontFamily">@*android:string/config_headlineFontFamilyMedium</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textSize">32dp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#ffffff</item>
     </style>
 
     <style name="TextAppearance.StatusBar.Expanded.Date">
-        <item name="android:textSize">@dimen/qs_time_expanded_size</item>
+        <item name="android:textSize">12dp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:fontFamily">@*android:string/config_bodyFontFamily</item>
+        <item name="android:textColor">#cccccc</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="TextAppearance.StatusBar.Expanded.AboveDateTime">
@@ -451,10 +454,13 @@
              states (no monet primary90 light-fill for active), and the
              active/inactive distinction moves to white vs gray text and
              icon tint, as on the 4.4 quick settings panel. -->
-        <item name="shadeActive">#ff2d2d2d</item>
+        <!-- KitKat UI P20.7: donor qs_tile_background.xml - flat color
+             selector #161616 at rest / #212121 pressed (not #ff2d2d2d).
+             Active/inactive distinction stays text/icon tint (4.4). -->
+        <item name="shadeActive">#ff161616</item>
         <item name="onShadeActive">#ffffffff</item>
         <item name="onShadeActiveVariant">#ffb3b3b3</item>
-        <item name="shadeInactive">#ff2d2d2d</item>
+        <item name="shadeInactive">#ff161616</item>
         <item name="onShadeInactive">#ffb3b3b3</item>
         <item name="onShadeInactiveVariant">#ff808080</item>
         <item name="shadeDisabled">@color/shade_disabled</item>

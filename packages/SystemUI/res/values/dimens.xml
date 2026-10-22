@@ -662,7 +662,8 @@
     <dimen name="qs_corner_radius">2dp</dimen>
     <!-- KitKat UI Project (P10): 4.4 QS cell height (donor quick_settings_cell_height) -->
     <dimen name="qs_tile_height">110dp</dimen>
-    <dimen name="qs_tile_margin_horizontal">8dp</dimen>
+    <!-- KitKat UI P20.6: donor quick_settings_cell_gap = 4dp. -->
+    <dimen name="qs_tile_margin_horizontal">4dp</dimen>
     <dimen name="qs_tile_margin_vertical">@dimen/qs_tile_margin_horizontal</dimen>
     <dimen name="qs_tile_margin_top_bottom">4dp</dimen>
     <dimen name="qs_brightness_margin_top">8dp</dimen>

@@ -754,6 +754,10 @@
     <string name="quick_settings_cast_no_network">No Wi\u2011Fi or Ethernet connection</string>
     <!-- QuickSettings: Brightness dialog title [CHAR LIMIT=NONE] -->
     <string name="quick_settings_brightness_dialog_title">Brightness</string>
+    <!-- KitKat UI P20.8/P20.10: donor 4.4 QS tile labels. -->
+    <string name="quick_settings_brightness_label">Brightness</string>
+    <string name="quick_settings_settings_label">Settings</string>
+    <string name="quick_settings_user_label">Me</string>
     <!-- QuickSettings: Label for the toggle that controls whether display inversion is enabled. [CHAR LIMIT=NONE] -->
     <string name="quick_settings_inversion_label">Color inversion</string>
     <!-- QuickSettings: Label for the toggle that controls whether display color correction is enabled. [CHAR LIMIT=NONE] -->

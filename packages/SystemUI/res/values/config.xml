@@ -97,8 +97,16 @@
     <!-- The number of columns that the top level tiles span in the QuickSettings -->
 
     <!-- The default tiles to display in QuickSettings -->
+    <!-- KitKat UI P20.10: the DONOR 4.4 phone QS tile set + order
+         (QuickSettings.setupQuickSettings: user, brightness, settings,
+         wifi, cell/rssi, battery, bluetooth, location, rotation).
+         20.8: brightness opens the donor quick_settings_brightness_
+         dialog (tile spec "brightness" -> dialog launch, no inline
+         slider). 20.7/20.6: flat #161616/#212121-press square tiles,
+         4dp gaps, 3 columns. Modern-only tiles dropped from the grid
+         per user ruling (toggles stay reachable in Settings). -->
     <string name="quick_settings_tiles_default" translatable="false">
-        internet,bt,flashlight,dnd,alarm,airplane,controls,wallet,rotation,battery,cast,screenrecord,mictoggle,cameratoggle,custom(com.android.permissioncontroller/.permission.service.v33.SafetyCenterQsTileService)
+        user,brightness,settings,wifi,cell,battery,bt,location,rotation
     </string>
 
     <!-- The class path of the Safety Quick Settings Tile -->

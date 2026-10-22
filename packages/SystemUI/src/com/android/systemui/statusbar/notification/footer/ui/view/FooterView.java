@@ -259,8 +259,14 @@ public class FooterView extends StackScrollerDecorView {
             mClearAllButton.setVisibility(View.GONE);
             mSeenNotifsFooterTextView.setVisibility(View.VISIBLE);
         } else {
-            mManageOrHistoryButton.setVisibility(View.VISIBLE);
-            mClearAllButton.setVisibility(View.VISIBLE);
+            // KitKat UI Project (P20.3): the 4.4 shade had NO manage/
+            // clear-all footer buttons (clear-all = the header X; settings
+            // = the header gear). Keep them hidden in the normal path too -
+            // this legacy branch previously re-showed both buttons every
+            // layout pass, defeating the FooterViewModel hide. Re-enable by
+            // restoring View.VISIBLE here and in the ViewModel flip.
+            mManageOrHistoryButton.setVisibility(View.GONE);
+            mClearAllButton.setVisibility(View.GONE);
             mSeenNotifsFooterTextView.setVisibility(View.GONE);
         }
     }

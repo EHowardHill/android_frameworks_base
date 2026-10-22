@@ -41,6 +41,9 @@ import com.android.systemui.plugins.statusbar.StatusBarStateController
 import com.android.systemui.recents.OverviewProxyService
 import com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
 import com.android.systemui.res.R
+import com.android.systemui.shade.ShadeExpansionChangeEvent
+import com.android.systemui.shade.ShadeExpansionListener
+import com.android.systemui.shade.ShadeExpansionStateManager
 import com.android.systemui.shade.carrier.ShadeCarrierTextController
 import com.android.systemui.shade.domain.interactor.ShadeInteractor
 import com.android.systemui.shared.system.QuickStepContract
@@ -74,6 +77,7 @@ class NotificationsQSContainerController @Inject constructor(
     private val largeScreenHeaderHelperLazy: Lazy<LargeScreenHeaderHelper>,
     private val carrierTextManagerBuilder: CarrierTextManager.Builder,
     private val statusBarStateController: StatusBarStateController,
+    private val shadeExpansionStateManager: ShadeExpansionStateManager,
 ) : ViewController<NotificationsQuickSettingsContainer>(view), QSContainerController {
 
     // KitKat UI Project: carrier label at the bottom of the shade
@@ -92,6 +96,25 @@ class NotificationsQSContainerController @Inject constructor(
                 shadeBottomHandle?.visibility =
                 if (newState == StatusBarState.SHADE) View.VISIBLE else View.GONE
             }
+        }
+
+    // KitKat UI Project (P20.2c): donor NotificationPanelView.draw() semantics -
+    // the 4.4 white close handle was drawn GLUED TO THE BOTTOM EDGE OF THE
+    // EXPANDED AREA, tracking the finger mid-drag (offset =
+    // height - handleHeight at the current expansion). Ride the expansion
+    // fraction: at 0 the handle sits just under the status bar (collapsed
+    // grabber), rising to the panel bottom as the shade fully opens.
+    private val shadeBottomHandleExpansionListener =
+        ShadeExpansionListener { event: ShadeExpansionChangeEvent ->
+            if (statusBarStateController.state != StatusBarState.SHADE) return@ShadeExpansionListener
+            val handle = shadeBottomHandle ?: return@ShadeExpansionListener
+            if (event.fraction <= 0f) return@ShadeExpansionListener
+            val panelHeight = mView.height
+            if (panelHeight <= 0) return@ShadeExpansionListener
+            // Bottom edge of the expanded area, in container coordinates.
+            val edgeY = (panelHeight * event.fraction).toInt()
+            val parentTop = mView.top
+            handle.translationY = (parentTop + edgeY - mView.bottom).toFloat()
         }
 
     private var splitShadeEnabled = false
@@ -167,6 +190,7 @@ class NotificationsQSContainerController @Inject constructor(
         overviewProxyService.addCallback(taskbarVisibilityListener)
         statusBarStateController.addCallback(shadeBottomHandleStateListener)
         shadeBottomHandleStateListener.onStateChanged(statusBarStateController.getState())
+        shadeExpansionStateManager.addExpansionListener(shadeBottomHandleExpansionListener)
         mView.setInsetsChangedListener(delayedInsetSetter)
         mView.setQSFragmentAttachedListener { qs: QS -> qs.setContainerController(this) }
         mView.setConfigurationChangedListener { updateResources() }
@@ -176,6 +200,7 @@ class NotificationsQSContainerController @Inject constructor(
     override fun onViewDetached() {
         overviewProxyService.removeCallback(taskbarVisibilityListener)
         statusBarStateController.removeCallback(shadeBottomHandleStateListener)
+        shadeExpansionStateManager.removeExpansionListener(shadeBottomHandleExpansionListener)
         mView.removeOnInsetsChangedListener()
         mView.removeQSFragmentAttachedListener()
         mView.setConfigurationChangedListener(null)
