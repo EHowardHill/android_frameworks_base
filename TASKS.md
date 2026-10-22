@@ -1618,16 +1618,16 @@ Launcher3-Modern experience):
       FORKED + PINNED:
       github.com/EHowardHill/android_packages_apps_Eleven
       lineage-21.0 - sync-safe.
-- [ ] DeskClock/Clock (donor packages/apps/DeskClock) -> replace the
-      modern DeskClock. AlarmManager/AlarmClockManager intents stable;
-      ports: runtime ALTER_SETTINGS? (no - SET_EXACT_ALARM new-model
-      handling), notification channel for alarms, vibrate policy.
-      4.4 alarm/world-clock/stopwatch UI verbatim.
-- [ ] Messaging (donor packages/apps/Mms) -> replace Messaging
-      (com.android.mms). 4.4 Mms source is present in Lineage already
-      as BasicSmsReceiver donor bits; full port: SEND_SMS/CONTACTS
-      runtime perms, default-SMS role plumbing (RoleManager), keep
-      modern car/SMS restrictions. KitKat hangout-style dark thread UI.
+- [X] DeskClock/Clock (donor packages/apps/DeskClock) -> replace the
+      modern DeskClock. DONE + VERIFIED + FORKED + PINNED
+      (2026-10-22, sixth/seventh batches - datetimepicker vendored,
+      alarm schedules end-to-end; see the ratification block and the
+      seventh-batch implementation notes for the full modernization
+      set). Alarm-ring + playback sound: user audio AVD.
+- [X] Messaging (donor packages/apps/Mms): DECIDED (user, 2026-10-21)
+      NO PORT - DEFERRED ENTIRELY. Cannot be tested without a SIM;
+      ship modern Messaging on the DeviceDefault cascade. Documented
+      hybrid per philosophy rules 2/3.
 
 ### Tier 2 - paired ports (must land together)
 
