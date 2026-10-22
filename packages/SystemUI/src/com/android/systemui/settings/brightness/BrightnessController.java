@@ -41,7 +41,7 @@ import android.service.vr.IVrManager;
 import android.service.vr.IVrStateCallbacks;
 import android.util.Log;
 import android.util.MathUtils;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
@@ -76,7 +76,7 @@ public class BrightnessController implements ToggleSlider.Listener, MirroredBrig
     private static final Uri BRIGHTNESS_MODE_URI =
             Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS_MODE);
 
-    private final CompoundButton mIcon;
+    private final ImageView mIcon;
     private final int mDisplayId;
     private final Context mContext;
     private final ToggleSlider mControl;
@@ -406,10 +406,10 @@ public class BrightnessController implements ToggleSlider.Listener, MirroredBrig
     }
 
     private void updateIcon(boolean automatic) {
-        // KitKat UI Project: the auto toggle is the Holo "Auto" checkbox; its
-        // checked state tracks auto-brightness (was auto on/off icon pair).
         if (mIcon != null) {
-            mIcon.setChecked(mAutomatic);
+            mIcon.setImageResource(mAutomatic ?
+                    R.drawable.ic_qs_brightness_auto_on :
+                    R.drawable.ic_qs_brightness_auto_off);
         }
     }
 

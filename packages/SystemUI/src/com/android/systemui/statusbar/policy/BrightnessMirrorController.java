@@ -28,7 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 
 import com.android.systemui.res.R;
 import com.android.systemui.settings.brightness.BrightnessSliderController;
@@ -61,7 +61,7 @@ public class BrightnessMirrorController
     private int mLastBrightnessSliderWidth = -1;
     private boolean mShouldShowAutoBrightness;
     private boolean mIsAutomaticBrightnessAvailable;
-    private CompoundButton mIcon;
+    private ImageView mIcon;
 
     public BrightnessMirrorController(NotificationShadeWindowView statusBarWindow,
             ShadeViewController shadeViewController,
@@ -219,8 +219,9 @@ public class BrightnessMirrorController
                     Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL,
                     UserHandle.USER_CURRENT);
             boolean isAutomatic = automatic != Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL;
-            // KitKat UI Project: Holo "Auto" checkbox (was auto on/off icon pair)
-            mIcon.setChecked(isAutomatic);
+            mIcon.setImageResource(isAutomatic
+                    ? R.drawable.ic_qs_brightness_auto_on
+                    : R.drawable.ic_qs_brightness_auto_off);
             mIcon.setVisibility(View.VISIBLE);
         } else {
             mIcon.setVisibility(View.GONE);

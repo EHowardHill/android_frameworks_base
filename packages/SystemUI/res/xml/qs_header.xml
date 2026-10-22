@@ -15,15 +15,6 @@
   ~ limitations under the License.
   -->
 
-<!-- KitKat UI Project (15.1): the expanded QS state is now the donor's
-     single 48dp header row (donor status_bar_expanded_header.xml /
-     flip_settings.xml): avatar + clock + date at the left, privacy chip,
-     clear-all X and settings gear at the right. The modern 3-row stack
-     (carrier group, header system icons with battery, scaled-up big
-     clock) is retired - the status bar itself carries the icons/wifi/
-     battery (the shade window is inset below it since 11.2), and the
-     header no longer duplicates them. -->
-
 <ConstraintSet
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -37,24 +28,8 @@
             android:layout_height="@dimen/large_screen_shade_header_min_height"
             app:layout_constraintEnd_toEndOf="@id/end_guide"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/carrier_group"
             app:layout_constraintHorizontal_bias="1"
-            />
-    </Constraint>
-
-    <!-- KitKat UI Project: QS header user avatar at the start, before the
-         clock - the 4.4 QS panel header carried it (12.2). -->
-    <Constraint
-        android:id="@+id/shade_header_user_avatar">
-        <Layout
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/clock"
-            app:layout_constraintBottom_toBottomOf="@id/clock"
-            />
-        <PropertySet
-            android:alpha="1"
             />
     </Constraint>
 
@@ -63,31 +38,28 @@
         <Layout
             android:layout_width="wrap_content"
             android:layout_height="@dimen/large_screen_shade_header_min_height"
-            app:layout_constraintStart_toEndOf="@id/shade_header_user_avatar"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/privacy_container"
+            app:layout_constraintBottom_toBottomOf="@id/carrier_group"
         />
-        <!-- qqs_expand_clock_scale is pinned to 1.0 in dimens: the modern
-             big-clock scaling is retired; 4.4 showed a normal clock. -->
         <Transform
             android:scaleX="@dimen/qqs_expand_clock_scale"
             android:scaleY="@dimen/qqs_expand_clock_scale"
             />
     </Constraint>
 
-    <!-- Donor: date sits on the clock row, baseline-aligned. -->
     <Constraint
         android:id="@+id/date">
         <Layout
             android:layout_width="wrap_content"
             android:layout_height="@dimen/new_qs_header_non_clickable_element_height"
-            app:layout_constraintStart_toEndOf="@id/clock"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintTop_toBottomOf="@id/carrier_group"
+        />
     </Constraint>
 
-    <!-- Retired with the 3-row stack (status bar carries the carrier) -->
+    <!-- ShadeHeaderController helps with managing clock width to layout this view -->
     <Constraint
         android:id="@+id/carrier_group">
         <Layout
@@ -96,17 +68,15 @@
             app:layout_constraintWidth_min="48dp"
             app:layout_constraintWidth_default="wrap"
             app:layout_constraintStart_toStartOf="@id/clock"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/privacy_container"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/batteryRemainingIcon"
             />
         <PropertySet
-            android:alpha="0"
-            android:visibility="gone"
+            android:alpha="1"
             />
     </Constraint>
 
-    <!-- Retired: header icons duplicated the status bar. Kept in the
-         hierarchy for ShadeHeaderController wiring; never rendered. -->
     <Constraint
         android:id="@+id/shade_header_system_icons">
         <Layout
@@ -115,43 +85,8 @@
             app:layout_constraintWidth_default="wrap"
             app:layout_constraintStart_toEndOf="@id/date"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-        <PropertySet
-            android:alpha="0"
-            android:visibility="gone"
-            />
-    </Constraint>
-
-    <!-- KitKat UI Project (12.2): 4.4 clear-all X. KitKat UI Project
-         (15.3): hidden in the expanded QS state - the two-panel flip
-         pushes notifications below the fold, so there is nothing to clear
-         (the donor QS header carried no X). Width 0 lets the gear slide
-         to the far right across the QQS->QS transition. -->
-    <Constraint
-        android:id="@+id/shade_header_clear_all_button">
-        <Layout
-            android:layout_width="0dp"
-            android:layout_height="@dimen/large_screen_shade_header_min_height"
-            app:layout_constraintEnd_toStartOf="@id/shade_header_settings_button"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-        <PropertySet
-            android:alpha="0"
-            />
-    </Constraint>
-
-    <!-- KitKat UI Project: settings gear pinned to the top-right of the header -->
-    <Constraint
-        android:id="@+id/shade_header_settings_button">
-        <Layout
-            android:layout_width="@dimen/shade_header_settings_button_width"
-            android:layout_height="@dimen/large_screen_shade_header_min_height"
-            app:layout_constraintEnd_toStartOf="@id/privacy_container"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/date"
+            app:layout_constraintBottom_toBottomOf="@id/date"
             />
     </Constraint>
 

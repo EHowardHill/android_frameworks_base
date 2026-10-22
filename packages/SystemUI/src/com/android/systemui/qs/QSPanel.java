@@ -221,20 +221,18 @@ public class QSPanel extends LinearLayout {
      * Used to add the brightness slider after construction.
      */
     public void setBrightnessView(@NonNull View view) {
-        // KitKat UI Project (P20.8): the donor phone QS had NO inline
-        // brightness slider above the grid - brightness is a TILE that
-        // opens the brightness dialog (KitKatBrightnessTile). Do not attach
-        // the slider view to the panel; keep the reference plumbing intact
-        // (QSPanelController/mirrors still function) so re-enabling is a
-        // one-line revert.
-        view.setVisibility(View.GONE);
         if (mBrightnessView != null) {
             removeView(mBrightnessView);
             mChildrenLayoutTop.remove(mBrightnessView);
             mMovableContentStartIndex--;
         }
-        mBrightnessView = null;
+        addView(view, 0);
+        mBrightnessView = view;
         mAutoBrightnessView = view.findViewById(R.id.brightness_icon);
+
+        setBrightnessViewMargin();
+
+        mMovableContentStartIndex++;
     }
 
     private void setBrightnessViewMargin() {
@@ -439,14 +437,6 @@ public class QSPanel extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mFooter = findViewById(R.id.qs_footer);
-        // KitKat UI P18.4: the 4.4 QS panel had NO build/version-text footer
-        // above the tile grid (or the brightness slider). Hide it so the
-        // slider sits directly under the 48dp header clearance
-        // (qs_panel_padding_top) - the dead band it left (48dp height +
-        // 8dp bottom margin) was the gap between header and brightness bar.
-        if (mFooter != null) {
-            mFooter.setVisibility(View.GONE);
-        }
     }
 
     private void updateHorizontalLinearLayoutMargins() {

@@ -76,48 +76,31 @@ frame when animating QS <-> QQS transition
         app:barrierDirection="start"
         app:constraint_referenced_ids="shade_header_system_icons,privacy_container" />
 
-    <!-- KitKat UI Project: 4.4 QS panel header user avatar (circular crop via
-         outline). Positioned at the start, before the clock, in all three
-         constraint sets. -->
-    <ImageView
-        android:id="@+id/shade_header_user_avatar"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_gravity="start|center_vertical"
-        android:scaleType="centerInside"
-        android:background="@drawable/kitkat_qs_user_avatar_circle"
-        android:clipToOutline="true"
-        android:contentDescription="@string/shade_header_user_avatar_description"
-        android:src="@drawable/kitkat_qs_user_avatar" />
-
-    <!-- KitKat UI P20.9: donor header clock+date - the 4.4
-         status_bar_expanded_header put clock and date inside a
-         non-pressable ic_notify_button_bg pill (enabled=false) with the
-         donor Expanded.Clock/.Date typography. -->
     <com.android.systemui.statusbar.policy.Clock
         android:id="@+id/clock"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:gravity="start|center_vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:background="@drawable/ic_notify_button_bg"
-        android:enabled="false"
+        android:paddingStart="@dimen/status_bar_left_clock_starting_padding"
+        android:paddingEnd="@dimen/status_bar_left_clock_end_padding"
         android:singleLine="true"
         android:textDirection="locale"
-        android:textAppearance="@style/TextAppearance.StatusBar.Expanded.Clock"
+        android:textAppearance="@style/TextAppearance.QS.Status"
+        android:transformPivotX="0dp"
+        android:transformPivotY="24dp"
+        android:scaleX="1"
+        android:scaleY="1"
     />
 
     <com.android.systemui.statusbar.policy.VariableDateView
         android:id="@+id/date"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="start|center_vertical"
         android:gravity="center_vertical"
-        android:layout_marginStart="8dp"
         android:singleLine="true"
         android:textDirection="locale"
-        android:textAppearance="@style/TextAppearance.StatusBar.Expanded.Date"
+        android:textAppearance="@style/TextAppearance.QS.Status"
         app:longDatePattern="@string/abbrev_wday_month_day_no_year_alarm"
         app:shortDatePattern="@string/abbrev_month_day_no_year"
     />
@@ -182,41 +165,5 @@ frame when animating QS <-> QQS transition
             android:layout_height="match_parent" />
 
     </FrameLayout>
-
-    <!-- KitKat UI Project (12.2): 4.4 shade-header clear-all X (donor
-         ic_notify_clear, right of the clock row, inboard of the gear).
-         Donor: 50x50dp ImageButton with ic_notify_button_bg; sized 48dp
-         here to match the gear row. Wired in ShadeHeaderController to the
-         same NotificationStackScrollLayout.clearAllNotifications call the
-         footer button used. -->
-    <ImageButton
-        android:id="@+id/shade_header_clear_all_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_notify_clear"
-        android:scaleType="center"
-        android:background="@drawable/ic_notify_button_bg"
-        android:contentDescription="@string/accessibility_clear_all"
-        app:layout_constraintEnd_toStartOf="@id/shade_header_settings_button"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- KitKat UI Project: settings gear pinned to the top-right of the shade
-          header (launches Settings, like the 4.4 status bar header). Pinned
-          start of the privacy chip so the two never overlap; carried into the
-          qqs_header/qs_header/large_screen_shade_header constraint sets so the
-          MotionLayout transitions leave it in place. -->
-    <!-- KitKat UI P20.4: donor settings glyph (ic_notify_settings, NOT the
-         modern gear) on the donor ic_notify_button_bg press 9-patch;
-         donor 50x50dp size. Behavior unchanged (15.3: tap = flip QS). -->
-    <ImageButton
-        android:id="@+id/shade_header_settings_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_notify_settings"
-        android:scaleType="center"
-        android:background="@drawable/ic_notify_button_bg"
-        android:contentDescription="@string/shade_header_settings_button_description"
-        app:layout_constraintEnd_toStartOf="@id/privacy_container"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </com.android.systemui.util.NoRemeasureMotionLayout>

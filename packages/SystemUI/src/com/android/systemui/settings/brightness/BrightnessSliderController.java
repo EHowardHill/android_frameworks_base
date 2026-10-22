@@ -23,7 +23,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
@@ -57,7 +57,7 @@ public class BrightnessSliderController extends ViewController<BrightnessSliderV
 
     private Listener mListener;
     private ToggleSlider mMirror;
-    private CompoundButton mIcon;
+    private ImageView mIcon;
     private BrightnessMirrorController mMirrorController;
     private boolean mTracking;
     private final FalsingManager mFalsingManager;
@@ -101,7 +101,7 @@ public class BrightnessSliderController extends ViewController<BrightnessSliderV
         return mView;
     }
 
-    public CompoundButton getIcon() {
+    public ImageView getIcon() {
         return mIcon;
     }
 

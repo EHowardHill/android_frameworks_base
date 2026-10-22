@@ -754,10 +754,6 @@
     <string name="quick_settings_cast_no_network">No Wi\u2011Fi or Ethernet connection</string>
     <!-- QuickSettings: Brightness dialog title [CHAR LIMIT=NONE] -->
     <string name="quick_settings_brightness_dialog_title">Brightness</string>
-    <!-- KitKat UI P20.8/P20.10: donor 4.4 QS tile labels. -->
-    <string name="quick_settings_brightness_label">Brightness</string>
-    <string name="quick_settings_settings_label">Settings</string>
-    <string name="quick_settings_user_label">Me</string>
     <!-- QuickSettings: Label for the toggle that controls whether display inversion is enabled. [CHAR LIMIT=NONE] -->
     <string name="quick_settings_inversion_label">Color inversion</string>
     <!-- QuickSettings: Label for the toggle that controls whether display color correction is enabled. [CHAR LIMIT=NONE] -->
@@ -995,14 +991,8 @@
 
     <!-- Sensor privacy dialog: Button to open system settings [CHAR LIMIT=50] -->
     <string name="sensor_privacy_dialog_open_settings">Open Settings</string>
-    <!-- KitKat UI Project: settings gear in the shade header -->
-    <string name="shade_header_settings_button_description">Open Settings</string>
-    <!-- KitKat UI Project: auto-brightness checkbox in the QS brightness row -->
-    <string name="quick_settings_brightness_auto">Auto</string>
     <!-- KitKat UI Project: recents panel -->
     <string name="kitkat_recents_empty" translatable="false">No recent apps</string>
-    <!-- KitKat UI Project: QS header user avatar -->
-    <string name="shade_header_user_avatar_description">User avatar</string>
 
     <!-- Default name for the media device shown in the output switcher when the name is not available [CHAR LIMIT=30] -->
     <string name="media_seamless_other_device">Other device</string>

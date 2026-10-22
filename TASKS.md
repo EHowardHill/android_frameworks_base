@@ -5,6 +5,10 @@ stock Android 4.4 KitKat across all system surfaces (framework theme,
 SystemUI, Settings). Feature set stays modern; launcher decision amended
 below (replaced with the user's own KitKat Launcher3 port).
 
+SCOPE AMENDED (2026-10-22, user direction): the notification shade and
+quick settings are REMOVED from scope - both ship stock LineageOS now
+(see Phase 21). Everything else stands.
+
 Hard constraint: modern apps must keep working. All changes stay at the
 visual, resource, and UX-shell layer; nothing alters APIs or behaviors
 that apps depend on.
@@ -204,7 +208,13 @@ All in frameworks/base/core/res unless noted.
       delta (gradient strip vs scrim tint) does not justify porting.
       Closed as no-port-needed.
 
-## Phase 3 - Notification shade and notifications [/]
+## Phase 3 - Notification shade and notifications - ROLLED BACK (P21)
+
+All shade/notification-panel work below was reverted to stock LineageOS
+2026-10-22 (see Phase 21); this section is the historical record. The
+status-bar ticker item at the end SURVIVES the rollback.
+
+## Phase 3 record [/]
 
 - [X] Gradient scrim background
       Implemented: the true 4.4 vertical gradient landed without the
@@ -302,6 +312,9 @@ All in frameworks/base/core/res unless noted.
       title+text are skipped).
 
 ## Phase 4 - Quick settings, volume dialog, power menu [/]
+
+The QS items below were ROLLED BACK to stock 2026-10-22 (see Phase 21);
+the volume-dialog and power-menu items SURVIVE.
 
 - [/] Rebuild quick settings as the 4.4 panel: user avatar, brightness slider with
       Auto checkbox, Holo toggle rows (layout restructure: code plus resources)
@@ -995,6 +1008,7 @@ VERIFIED ON DEVICE (second build): induced a Settings crash (note:
       or drop" latitude).
 
 ## Phase 12 - Notification shade deep-port from android-4.4.4_r1 [/]
+ROLLED BACK to stock 2026-10-22 (see Phase 21); historical record.
 
 Donor: ~/kitkat-src/frameworks-base/packages/SystemUI. Hard constraint
 held: visual/UX-shell layer only, the modern NSSL data model stays.
@@ -1320,6 +1334,7 @@ PARTIAL ON DEVICE (second build): the volume dialog renders dark
       then, not a reskin-by-colors lift. Deferred until that gate.
 
 ## Phase 15 - KitKat shade port, Launcher3-style [/]
+ROLLED BACK to stock 2026-10-22 (see Phase 21); historical record.
 
 User direction (first-build QA): the pull-down panel still has numerous
 issues; instead of continuing to patch the modern shade piecemeal, port
@@ -1810,6 +1825,11 @@ spinner/tab/ratingbar. This phase closes the remaining gaps.
 
 ## Consolidated remaining-work index (FINAL - 2026-10-22, ninth batch)
 
+AMENDED (later 2026-10-22): the shade/QS user passes below (P3/P4 QS
+parts, 20.x residuals, shade stability gates) are CANCELLED by the
+Phase 21 rollback - those surfaces are stock now. The volume,
+power-menu, recents, keyboard and app-port passes stand.
+
 ALL engineering work in TASKS.md is complete. Nine forks pinned and
 pushed (frameworks/base, Settings, Trebuchet=Launcher3-Modern,
 ExactCalculator, Recorder, LatinIME, Eleven, DeskClock, Etar); every
@@ -1837,6 +1857,7 @@ pending" records - trace each to its phase notes for status. No
 unowned work remains.
 
 ## Phase 20 - Shade/QS donor audit (user pass 2026-10-22) [X]
+ROLLED BACK to stock 2026-10-22 (see Phase 21); historical record.
 
 User's visual pass surfaced six issues, concentrated on the shade/QS;
 the donor re-study expanded the audit to ten. All DECIDED (user,
@@ -1899,35 +1920,45 @@ real touch, brightness dialog open on the audio AVD.
   All downstream obligations retargeted (philosophy rule 6 revised,
   17.6/15.4 closed under the source-tree standard).
 
-## Implementation notes (2026-1- [X] 20.7 QS TILE background: donor qs_tile_background.xml =
-      flat COLOR SELECTOR (#161616 rest / #212121 pressed, no
-      ripple, no rounding). IMPLEMENTED: shadeActive/shadeInactive
-      #ff2d2d2d -> #ff161616 (active/inactive distinction stays
-      text/icon tint per 4.4), ripple color -> #ff212121 donor
-      press, tile shape corners -> 0dp (square). VERIFIED: domina- [X] 20.8 Brightness: DECIDED (user) FULL DONOR - "fidelity > UX"
-      (ruling hardened into the governing rule). IMPLEMENTED:
-      QSPanel.setBrightnessView no longer attaches the slider
-      (reference/plumbing intact - one-line revert), and the donor
-      brightness TILE (KitKatBrightnessTile, spec "brightness")
-      opens the SystemUI BrightnessDialog (donor-restyled P4).
-      Registered in KitKatQSTilesModule. Retires 20.5.
-odule name ExactCalculator, vendored
-  viewpager, arity java_import, guava -> HashMap). Donor refs:
-  ~/kitkat-src/calculator-4.4, ~/kitkat-src/support-4.4.
-- package- [X] 20.9 Header clock/date: TextAppearance.StatusBar.Expanded.
-      Clock/.Date -> donor values (32dp sans-serif-light white
-      clock, 12dp #cccccc all-caps date); combined_qs_header
-      clock/date restyled onto the donor pill pattern
-      (ic_notify_button_bg, enabled=false, 8dp paddings). Clock
-      scale already pinned 1.0 by 15.1.
-with
-  `m KitKatWidgetPlayground` on both this - [X] 20.1 Keyboard: numbers-panel toggle keys (?123/ABC/sym) blank.
-      ROOT CAUSE (found implementing): the layout-switch keys carry
-      latin:keyLabelFlags="followFunctionalTextColor"; themes-kitkat
-      set no functionalTextColor so KeyDrawParams.mFunctionalTextColor
-      read 0 = transparent - the same class of bug as 13.4, on the
-      functional keys instead of the letter keys.
-      FIXED: functionalTextColor pinned to @color/key_text_color_normal_holo
-      (white; what every donor selector state resolved to) in
-      themes-kitkat.xml (LatinIME fork, pushed). Verified on device:
-      ?123/ABC keys render.
+## Phase 21 - Shade/QS rollback to stock (user direction, 2026-10-22) [X]
+
+User direction (2026-10-22): the shade/QS work did not feel good.
+ALL notification-panel and quick-settings changes are reverted;
+both surfaces now ship 100% stock LineageOS. Everything else stays
+KitKat: status bar (incl. the 4.4 ticker), navbar, recents, keyguard,
+volume, power menu, screenshot overlay, framework theme/fonts/sounds,
+and the app ports.
+
+Scope reverted (historical phases superseded - see their headers):
+- P3 shade items (gradient bg, flat rows, header gear, footer
+  buttons, drag handle, carrier label), keeping the ticker.
+- P4 QS items (tile chrome, Auto checkbox, avatar, QuickSettings
+  palette), keeping the volume dialog and power menu.
+- 11.1/11.2 (tile geometry, panel margin).
+- P12 deep-port (QQS max-tiles, header clear-all, panel frame).
+- P15 wholesale port (48dp header, PanelView fling, two-panel flip).
+- P18 shade/QS parts (footer drop, QS gap, scrim bools) + 18.4.
+- P20 donor rebuild (all ten items; the LatinIME 20.1 keyboard fix
+  lives in the LatinIME fork and STAYS).
+- 12.6 core notification typography (styles_material.xml colors +
+  18sp/20sp title sizes back to stock 14sp/16sp).
+
+Method: every shade/QS-only file restored byte-identical to the
+LineageOS baseline 993528cf0efb (== lineageos/lineage-21.0 tip) -
+the drop-the-file-and-pull-from-remote approach, applied to the
+fork tree. Shared files got hunk-level reverts: core dimens keeps
+the 25dp status bar and drops the 18sp/20sp notification titles;
+CentralSurfacesImpl keeps the ticker; SystemUI styles keep the
+keyguard accent pin and KitKatRecentsTheme; colors keep the power
+menu and screenshot-overlay pins.
+
+Verification: index diff vs the baseline is empty for every
+shade/QS file; grep audit found zero dangling references to the
+deleted KitKat shade/QS resources/classes; m SystemUI green
+(4:17) and m framework-res green on emu64x after the revert.
+Reverted as a single commit on kitkat-mods; push pending.
+
+DELTA NOTE (accept-and-document, rule 5): the stock shade now
+renders over the KitKat theme cascade (25dp opaque bar, Holo
+accents where the framework feeds SystemUI), so it reads
+LineageOS-modern, not pure 4.4 - exactly as intended by "stock".

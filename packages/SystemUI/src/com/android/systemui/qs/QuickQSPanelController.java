@@ -114,17 +114,12 @@ public class QuickQSPanelController extends QSPanelControllerBase<QuickQSPanel> 
 
     @Override
     public void setTiles() {
-        // KitKat UI Project (12.1 on-device fix): the stock loop adds the
-        // tile BEFORE checking the limit, so a limit of 0 (our
-        // quick_qs_panel_max_tiles=0 - the 4.4 half-open shade shows
-        // notifications only) never broke and ALL tiles rendered in the
-        // QQS band. Check the limit BEFORE adding.
         List<QSTile> tiles = new ArrayList<>();
         for (QSTile tile : mHost.getTiles()) {
-            if (tiles.size() >= mView.getNumQuickTiles()) {
+            tiles.add(tile);
+            if (tiles.size() == mView.getNumQuickTiles()) {
                 break;
             }
-            tiles.add(tile);
         }
         super.setTiles(tiles, /* collapsedView */ true);
     }

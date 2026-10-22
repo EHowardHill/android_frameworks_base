@@ -13,10 +13,6 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-    <!-- KitKat UI Project: 4.4-style brightness row - the auto-brightness
-         toggle is an Holo "Auto" checkbox (btn_check_holo_dark) instead of the
-         auto icon pair; it keeps the brightness_icon id so QSPanel tuning and
-         the mirror controller keep working. -->
     <com.android.systemui.settings.brightness.BrightnessSliderView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/brightness_slider"
@@ -42,18 +38,15 @@
             android:clickable="true"
         />
 
-        <CheckBox
+        <ImageView
             android:id="@+id/brightness_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="8dp"
-            android:button="@drawable/kitkat_btn_check"
-            android:text="@string/quick_settings_brightness_auto"
-            android:textColor="#ffeeeeee"
-            android:textSize="14sp"
-            android:contentDescription="@string/quick_settings_brightness_auto"
+            android:src="@drawable/ic_qs_brightness_auto_off"
+            android:contentDescription="@null"
             android:visibility="gone"
         />
     </com.android.systemui.settings.brightness.BrightnessSliderView>

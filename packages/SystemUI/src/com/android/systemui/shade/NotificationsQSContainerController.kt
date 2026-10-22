@@ -29,7 +29,6 @@ import androidx.constraintlayout.widget.ConstraintSet.TOP
 import androidx.lifecycle.lifecycleScope
 import com.android.systemui.Flags.centralizedStatusBarHeightFix
 import com.android.systemui.Flags.migrateClocksToBlueprint
-import com.android.keyguard.CarrierTextManager
 import com.android.systemui.dagger.SysUISingleton
 import com.android.systemui.dagger.qualifiers.Main
 import com.android.systemui.fragments.FragmentService
@@ -37,17 +36,11 @@ import com.android.systemui.lifecycle.repeatWhenAttached
 import com.android.systemui.navigationbar.NavigationModeController
 import com.android.systemui.plugins.qs.QS
 import com.android.systemui.plugins.qs.QSContainerController
-import com.android.systemui.plugins.statusbar.StatusBarStateController
 import com.android.systemui.recents.OverviewProxyService
 import com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
 import com.android.systemui.res.R
-import com.android.systemui.shade.ShadeExpansionChangeEvent
-import com.android.systemui.shade.ShadeExpansionListener
-import com.android.systemui.shade.ShadeExpansionStateManager
-import com.android.systemui.shade.carrier.ShadeCarrierTextController
 import com.android.systemui.shade.domain.interactor.ShadeInteractor
 import com.android.systemui.shared.system.QuickStepContract
-import com.android.systemui.statusbar.StatusBarState
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayoutController
 import com.android.systemui.statusbar.policy.SplitShadeStateController
 import com.android.systemui.util.LargeScreenUtils
@@ -75,47 +68,7 @@ class NotificationsQSContainerController @Inject constructor(
     notificationStackScrollLayoutController: NotificationStackScrollLayoutController,
     private val splitShadeStateController: SplitShadeStateController,
     private val largeScreenHeaderHelperLazy: Lazy<LargeScreenHeaderHelper>,
-    private val carrierTextManagerBuilder: CarrierTextManager.Builder,
-    private val statusBarStateController: StatusBarStateController,
-    private val shadeExpansionStateManager: ShadeExpansionStateManager,
 ) : ViewController<NotificationsQuickSettingsContainer>(view), QSContainerController {
-
-    // KitKat UI Project: carrier label at the bottom of the shade
-    // (status_bar_expanded.xml, shade_carrier_text).
-    private lateinit var shadeCarrierTextController: ShadeCarrierTextController
-
-    // KitKat UI Project: shade drag handle (status_bar_expanded.xml,
-    // shade_bottom_handle), shown in the unlocked shade only.
-    private val shadeBottomHandle: View? by lazy {
-        mView.findViewById<View>(R.id.shade_bottom_handle)
-    }
-
-    private val shadeBottomHandleStateListener =
-        object : StatusBarStateController.StateListener {
-            override fun onStateChanged(newState: Int) {
-                shadeBottomHandle?.visibility =
-                if (newState == StatusBarState.SHADE) View.VISIBLE else View.GONE
-            }
-        }
-
-    // KitKat UI Project (P20.2c): donor NotificationPanelView.draw() semantics -
-    // the 4.4 white close handle was drawn GLUED TO THE BOTTOM EDGE OF THE
-    // EXPANDED AREA, tracking the finger mid-drag (offset =
-    // height - handleHeight at the current expansion). Ride the expansion
-    // fraction: at 0 the handle sits just under the status bar (collapsed
-    // grabber), rising to the panel bottom as the shade fully opens.
-    private val shadeBottomHandleExpansionListener =
-        ShadeExpansionListener { event: ShadeExpansionChangeEvent ->
-            if (statusBarStateController.state != StatusBarState.SHADE) return@ShadeExpansionListener
-            val handle = shadeBottomHandle ?: return@ShadeExpansionListener
-            if (event.fraction <= 0f) return@ShadeExpansionListener
-            val panelHeight = mView.height
-            if (panelHeight <= 0) return@ShadeExpansionListener
-            // Bottom edge of the expanded area, in container coordinates.
-            val edgeY = (panelHeight * event.fraction).toInt()
-            val parentTop = mView.top
-            handle.translationY = (parentTop + edgeY - mView.bottom).toFloat()
-        }
 
     private var splitShadeEnabled = false
     private var isQSDetailShowing = false
@@ -177,20 +130,11 @@ class NotificationsQSContainerController @Inject constructor(
         isGestureNavigation = QuickStepContract.isGesturalMode(currentMode)
 
         mView.setStackScroller(notificationStackScrollLayoutController.getView())
-
-        shadeCarrierTextController = ShadeCarrierTextController(
-            mView.findViewById(R.id.kitkat_shade_carrier_text),
-            carrierTextManagerBuilder,
-            statusBarStateController)
-        shadeCarrierTextController.init()
     }
 
     public override fun onViewAttached() {
         updateResources()
         overviewProxyService.addCallback(taskbarVisibilityListener)
-        statusBarStateController.addCallback(shadeBottomHandleStateListener)
-        shadeBottomHandleStateListener.onStateChanged(statusBarStateController.getState())
-        shadeExpansionStateManager.addExpansionListener(shadeBottomHandleExpansionListener)
         mView.setInsetsChangedListener(delayedInsetSetter)
         mView.setQSFragmentAttachedListener { qs: QS -> qs.setContainerController(this) }
         mView.setConfigurationChangedListener { updateResources() }
@@ -199,8 +143,6 @@ class NotificationsQSContainerController @Inject constructor(
 
     override fun onViewDetached() {
         overviewProxyService.removeCallback(taskbarVisibilityListener)
-        statusBarStateController.removeCallback(shadeBottomHandleStateListener)
-        shadeExpansionStateManager.removeExpansionListener(shadeBottomHandleExpansionListener)
         mView.removeOnInsetsChangedListener()
         mView.removeQSFragmentAttachedListener()
         mView.setConfigurationChangedListener(null)
@@ -249,11 +191,16 @@ class NotificationsQSContainerController @Inject constructor(
     }
 
     private fun calculateShadeHeaderHeight(): Int {
-        // KitKat UI Project (15.1): the header is the donor's single 48dp
-        // row in both QQS and QS states (qs_header_height). The old
-        // 3-row estimate went away with the carrier-group/system-icons
-        // rows, which the status bar now carries instead.
-        return resources.getDimensionPixelSize(R.dimen.qs_header_height)
+        val minHeight = resources.getDimensionPixelSize(R.dimen.qs_header_height)
+
+        // Following the constraints in xml/qs_header, the total needed height would be the sum of
+        // 1. privacy_container height (R.dimen.large_screen_shade_header_min_height)
+        // 2. carrier_group height (R.dimen.large_screen_shade_header_min_height)
+        // 3. date height (R.dimen.new_qs_header_non_clickable_element_height)
+        val estimatedHeight =
+                2 * resources.getDimensionPixelSize(R.dimen.large_screen_shade_header_min_height) +
+                resources.getDimensionPixelSize(R.dimen.new_qs_header_non_clickable_element_height)
+        return estimatedHeight.coerceAtLeast(minHeight)
     }
 
     override fun setCustomizerAnimating(animating: Boolean) {

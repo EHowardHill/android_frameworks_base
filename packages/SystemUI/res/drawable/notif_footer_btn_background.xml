@@ -22,13 +22,11 @@
             android:insetBottom="4dp"
             android:insetTop="4dp">
             <shape android:shape="rectangle">
-                <!-- KitKat UI Project: flat dark footer button (was 20dp-corner
-                     materialColorSurfaceContainerHigh pill) -->
-                <corners android:radius="2dp" />
+                <corners android:radius="20dp" />
                 <padding
                     android:left="20dp"
                     android:right="20dp" />
-                <solid android:color="#ff2d2d2d" />
+                <solid android:color="?androidprv:attr/materialColorSurfaceContainerHigh" />
             </shape>
         </inset>
     </item>

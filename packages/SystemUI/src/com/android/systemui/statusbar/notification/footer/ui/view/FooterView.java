@@ -16,7 +16,9 @@
 
 package com.android.systemui.statusbar.notification.footer.ui.view;
 
+import static android.graphics.PorterDuff.Mode.SRC_ATOP;
 
+import static com.android.systemui.Flags.notificationBackgroundTintOptimization;
 import static com.android.systemui.util.ColorUtilKt.hexColorString;
 
 import android.annotation.ColorInt;
@@ -27,6 +29,8 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.IndentingPrintWriter;
@@ -35,6 +39,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.android.settingslib.Utils;
 import com.android.systemui.res.R;
 import com.android.systemui.statusbar.notification.ColorUpdateLogger;
 import com.android.systemui.statusbar.notification.footer.shared.FooterViewRefactor;
@@ -259,32 +264,9 @@ public class FooterView extends StackScrollerDecorView {
             mClearAllButton.setVisibility(View.GONE);
             mSeenNotifsFooterTextView.setVisibility(View.VISIBLE);
         } else {
-            // KitKat UI Project (P20.3): the 4.4 shade had NO manage/
-            // clear-all footer buttons (clear-all = the header X; settings
-            // = the header gear). Keep them hidden in the normal path too -
-            // this legacy branch previously re-showed both buttons every
-            // layout pass, defeating the FooterViewModel hide. Re-enable by
-            // restoring View.VISIBLE here and in the ViewModel flip.
-            mManageOrHistoryButton.setVisibility(View.GONE);
-            mClearAllButton.setVisibility(View.GONE);
+            mManageOrHistoryButton.setVisibility(View.VISIBLE);
+            mClearAllButton.setVisibility(View.VISIBLE);
             mSeenNotifsFooterTextView.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * KitKat UI P18.3: donor fidelity - the manage/history footer button is
-     * retired (the 4.4 shade had no such button; clear-all lives in the
-     * header X). Plain GONE; re-enabling is the FooterViewModel flip.
-     */
-    public void setManageButtonVisible(boolean visible, boolean animate) {
-        setManageButtonVisible(visible, animate, null);
-    }
-
-    public void setManageButtonVisible(boolean visible, boolean animate,
-            Consumer<Boolean> onAnimationEnded) {
-        mManageOrHistoryButton.setVisibility(visible ? View.VISIBLE : View.GONE);
-        if (onAnimationEnded != null) {
-            onAnimationEnded.accept(visible);
         }
     }
 
@@ -387,17 +369,25 @@ public class FooterView extends StackScrollerDecorView {
 
     /**
      * Update the text and background colors for the current color palette and night mode setting.
-     *
-     * KitKat UI Project: the footer chrome is pinned to flat KitKat colors (light gray text on
-     * the #ff2d2d2d button from notif_footer_btn_background.xml); the monet surface tint and
-     * onSurface text color are no longer applied here.
      */
     public void updateColors() {
         Resources.Theme theme = mContext.getTheme();
-        final @ColorInt int onSurface = 0xFFEEEEEE;
-        final @ColorInt int scHigh = 0;
+        final @ColorInt int onSurface = Utils.getColorAttrDefaultColor(mContext,
+                com.android.internal.R.attr.materialColorOnSurface);
         final Drawable clearAllBg = theme.getDrawable(R.drawable.notif_footer_btn_background);
         final Drawable manageBg = theme.getDrawable(R.drawable.notif_footer_btn_background);
+        final @ColorInt int scHigh;
+        if (!notificationBackgroundTintOptimization()) {
+            scHigh = Utils.getColorAttrDefaultColor(mContext,
+                    com.android.internal.R.attr.materialColorSurfaceContainerHigh);
+            if (scHigh != 0) {
+                final ColorFilter bgColorFilter = new PorterDuffColorFilter(scHigh, SRC_ATOP);
+                clearAllBg.setColorFilter(bgColorFilter);
+                manageBg.setColorFilter(bgColorFilter);
+            }
+        } else {
+            scHigh = 0;
+        }
         mClearAllButton.setBackground(clearAllBg);
         mClearAllButton.setTextColor(onSurface);
         mManageOrHistoryButton.setBackground(manageBg);

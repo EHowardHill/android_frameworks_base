@@ -33,21 +33,18 @@
         <item name="android:textColor">?android:attr/textColorTertiary</item>
     </style>
 
-    <!-- KitKat UI P20.9: donor TextAppearance.StatusBar.Expanded.Clock/.Date
-         (status_bar_expanded_header.xml values) - 32dp sans-serif-light
-         white clock, 12dp #cccccc all-caps date. -->
     <style name="TextAppearance.StatusBar.Expanded.Clock">
-        <item name="android:textSize">32dp</item>
-        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">@dimen/qs_time_expanded_size</item>
+        <item name="android:fontFamily">@*android:string/config_headlineFontFamilyMedium</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">#ffffff</item>
     </style>
 
     <style name="TextAppearance.StatusBar.Expanded.Date">
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">@dimen/qs_time_expanded_size</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">#cccccc</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:fontFamily">@*android:string/config_bodyFontFamily</item>
     </style>
 
     <style name="TextAppearance.StatusBar.Expanded.AboveDateTime">
@@ -127,14 +124,11 @@
         <item name="android:textColor">?attr/onShadeInactiveVariant</item>
     </style>
 
-    <!-- KitKat UI Project (11.1): 4.4 tile label per donor
-         TextAppearance.QuickSettings.TileView - 12sp regular, all-caps,
-         gray; weight/lineHeight/letterSpacing are Lollipop-era and made
-         the label overflow the 110dp donor cell. Color stays
-         programmatic (onShadeActive/onShadeInactive). -->
     <style name="TextAppearance.QS.TileLabel">
         <item name="android:textSize">@dimen/qs_tile_text_size</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:lineHeight">20sp</item>
+        <item name="android:fontFamily">@*android:string/config_bodyFontFamilyMedium</item>
     </style>
 
     <style name="TextAppearance.QS.TileLabel.Secondary">
@@ -161,17 +155,6 @@
     </style>
 
     <style name="TextAppearance.QS.Status.Carriers" />
-
-    <!-- KitKat UI Project: shade carrier label (status_bar_expanded.xml).
-         Deliberately does NOT chain into TextAppearance.QS.Status (whose
-         ?attr/onSurface only resolves once the fabricated monet overlay is
-         registered at boot; the shade root inflates eagerly at SystemUI
-         start, before that). Fixed 4.4 gray, 2013 Roboto via the sans-serif
-         repoint. -->
-    <style name="TextAppearance.KitKat.ShadeCarrier" parent="@android:style/TextAppearance.DeviceDefault.Small">
-        <item name="android:textColor">#ffb3b3b3</item>
-        <item name="android:textSize">14sp</item>
-    </style>
 
     <style name="TextAppearance.QS.Status.Carriers.NoCarrierText">
         <item name="android:textColor">?attr/onSurfaceVariant</item>
@@ -450,19 +433,12 @@
         <item name="onSurfaceVariant">?androidprv:attr/materialColorOnSurfaceVariant</item>
         <item name="outline">?androidprv:attr/materialColorOutline</item>
 
-        <!-- KitKat UI Project: flat 4.4 tile chrome - tiles stay dark in both
-             states (no monet primary90 light-fill for active), and the
-             active/inactive distinction moves to white vs gray text and
-             icon tint, as on the 4.4 quick settings panel. -->
-        <!-- KitKat UI P20.7: donor qs_tile_background.xml - flat color
-             selector #161616 at rest / #212121 pressed (not #ff2d2d2d).
-             Active/inactive distinction stays text/icon tint (4.4). -->
-        <item name="shadeActive">#ff161616</item>
-        <item name="onShadeActive">#ffffffff</item>
-        <item name="onShadeActiveVariant">#ffb3b3b3</item>
-        <item name="shadeInactive">#ff161616</item>
-        <item name="onShadeInactive">#ffb3b3b3</item>
-        <item name="onShadeInactiveVariant">#ff808080</item>
+        <item name="shadeActive">@color/material_dynamic_primary90</item>
+        <item name="onShadeActive">@color/material_dynamic_primary10</item>
+        <item name="onShadeActiveVariant">@color/material_dynamic_primary30</item>
+        <item name="shadeInactive">@color/material_dynamic_neutral20</item>
+        <item name="onShadeInactive">@color/material_dynamic_neutral90</item>
+        <item name="onShadeInactiveVariant">@color/material_dynamic_neutral_variant80</item>
         <item name="shadeDisabled">@color/shade_disabled</item>
         <item name="underSurface">@color/material_dynamic_neutral0</item>
         <item name="android:itemTextAppearance">@style/Control.MenuItem</item>
@@ -718,8 +694,7 @@
     <style
         name="TextAppearance.NotificationFooterButton"
         parent="@android:style/Widget.DeviceDefault.Button.Borderless">
-        <!-- KitKat UI Project: flat light-gray footer button text (was monet onSurface) -->
-        <item name="android:textColor">#ffeeeeee</item>
+        <item name="android:textColor">?androidprv:attr/materialColorOnSurface</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">14sp</item>
         <item name="android:minWidth">0dp</item>

@@ -26,7 +26,6 @@ import com.android.keyguard.KeyguardViewController;
 import com.android.systemui.ScreenDecorationsModule;
 import com.android.systemui.accessibility.SystemActionsModule;
 import com.android.systemui.battery.BatterySaverModule;
-import com.android.systemui.qs.tiles.KitKatQSTilesModule;
 import com.android.systemui.display.ui.viewmodel.ConnectingDisplayViewModel;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.dock.DockManagerImpl;
@@ -97,7 +96,6 @@ import javax.inject.Named;
 @Module(includes = {
         AospPolicyModule.class,
         BatterySaverModule.class,
-        KitKatQSTilesModule.class,
         CollapsedStatusBarFragmentStartableModule.class,
         ConnectingDisplayViewModel.StartableModule.class,
         GestureModule.class,

@@ -17,7 +17,7 @@
 package com.android.systemui.settings.brightness;
 
 import android.view.MotionEvent;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.systemui.statusbar.policy.BrightnessMirrorController;
@@ -41,7 +41,5 @@ public interface ToggleSlider {
     void hideView();
     boolean isVisible();
 
-    // KitKat UI Project: the auto-brightness toggle is an Holo "Auto" checkbox
-    // (was an auto on/off ImageView).
-    CompoundButton getIcon();
+    ImageView getIcon();
 }

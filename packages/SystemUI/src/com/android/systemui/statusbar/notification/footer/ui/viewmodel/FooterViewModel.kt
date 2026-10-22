@@ -45,13 +45,27 @@ class FooterViewModel(
     seenNotificationsInteractor: SeenNotificationsInteractor,
     shadeInteractor: ShadeInteractor,
 ) {
-    // KitKat UI Project (12.2): clear-all moved into the shade header as
-    // the 4.4 X button (ShadeHeaderController); the footer copy is retired.
     val clearAllButton: FooterButtonViewModel =
         FooterButtonViewModel(
             labelId = flowOf(R.string.clear_all_notifications_text),
             accessibilityDescriptionId = flowOf(R.string.accessibility_clear_all),
-            isVisible = flowOf(AnimatedValue.NotAnimating(false)),
+            isVisible =
+                activeNotificationsInteractor.hasClearableNotifications
+                    .sample(
+                        // TODO(b/322167853): This check is currently duplicated in
+                        //  NotificationListViewModel, but instead it should be a field in
+                        //  ShadeAnimationInteractor.
+                        combine(
+                                shadeInteractor.isShadeFullyExpanded,
+                                shadeInteractor.isShadeTouchable,
+                                ::Pair
+                            )
+                            .onStart { emit(Pair(false, false)) }
+                    ) { hasClearableNotifications, (isShadeFullyExpanded, animationsEnabled) ->
+                        val shouldAnimate = isShadeFullyExpanded && animationsEnabled
+                        AnimatableEvent(hasClearableNotifications, shouldAnimate)
+                    }
+                    .toAnimatedValueFlow(),
         )
 
     val manageButtonShouldLaunchHistory =
@@ -67,11 +81,7 @@ class FooterViewModel(
         FooterButtonViewModel(
             labelId = manageOrHistoryButtonText,
             accessibilityDescriptionId = manageOrHistoryButtonText,
-            // KitKat UI P18.3: the donor shade had NO manage/history footer
-            // button (clear-all lives in the header X, ShadeHeaderController).
-            // Full-donor-fidelity ruling: footer row hidden; the binder keeps
-            // wiring the click/label paths so re-enabling is a one-line flip.
-            isVisible = flowOf(AnimatedValue.NotAnimating(false)),
+            isVisible = flowOf(AnimatedValue.NotAnimating(true)),
         )
 
     val message: FooterMessageViewModel =

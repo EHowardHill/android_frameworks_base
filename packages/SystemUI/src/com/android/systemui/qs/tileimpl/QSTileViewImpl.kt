@@ -177,11 +177,8 @@ open class QSTileViewImpl @JvmOverloads constructor(
                     "Theme.SystemUI.QuickSettings")
         }
         setId(generateViewId())
-        // KitKat UI Project (P10): 4.4 tile layout - vertical, icon centered
-        // above the centered label (donor quick_settings_tile_basic.xml),
-        // instead of the modern horizontal icon-start/label-end row.
-        orientation = LinearLayout.VERTICAL
-        gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP
+        orientation = LinearLayout.HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL or Gravity.START
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         clipChildren = false
         clipToPadding = false
@@ -190,16 +187,11 @@ open class QSTileViewImpl @JvmOverloads constructor(
         setColor(getBackgroundColorForState(QSTile.State.DEFAULT_STATE))
 
         val padding = resources.getDimensionPixelSize(R.dimen.qs_tile_padding)
-        setPaddingRelative(padding, padding, padding, padding)
+        val startPadding = resources.getDimensionPixelSize(R.dimen.qs_tile_start_padding)
+        setPaddingRelative(startPadding, padding, padding, padding)
 
         val iconSize = resources.getDimensionPixelSize(R.dimen.qs_icon_size)
-        val iconAbove = resources.getDimensionPixelSize(R.dimen.kitkat_qs_tile_margin_above_icon)
-        val iconBelow = resources.getDimensionPixelSize(R.dimen.kitkat_qs_tile_margin_below_icon)
-        addView(icon, LayoutParams(iconSize, iconSize).apply {
-            gravity = Gravity.CENTER_HORIZONTAL
-            topMargin = iconAbove
-            bottomMargin = iconBelow
-        })
+        addView(icon, LayoutParams(iconSize, iconSize))
 
         createAndAddLabels()
         createAndAddSideView()
@@ -230,18 +222,23 @@ open class QSTileViewImpl @JvmOverloads constructor(
         FontSizeUtils.updateFontSize(secondaryLabel, R.dimen.qs_tile_text_size)
 
         val iconSize = context.resources.getDimensionPixelSize(R.dimen.qs_icon_size)
-        val iconAbove = resources.getDimensionPixelSize(R.dimen.kitkat_qs_tile_margin_above_icon)
-        val iconBelow = resources.getDimensionPixelSize(R.dimen.kitkat_qs_tile_margin_below_icon)
-        icon.layoutParams = (icon.layoutParams as LayoutParams).apply {
+        icon.layoutParams.apply {
             height = iconSize
             width = iconSize
-            gravity = Gravity.CENTER_HORIZONTAL
-            topMargin = iconAbove
-            bottomMargin = iconBelow
         }
 
         val padding = resources.getDimensionPixelSize(R.dimen.qs_tile_padding)
-        setPaddingRelative(padding, padding, padding, padding)
+        val startPadding = resources.getDimensionPixelSize(R.dimen.qs_tile_start_padding)
+        setPaddingRelative(startPadding, padding, padding, padding)
+
+        val labelMargin = resources.getDimensionPixelSize(R.dimen.qs_label_container_margin)
+        (labelContainer.layoutParams as MarginLayoutParams).apply {
+            marginStart = labelMargin
+        }
+
+        (sideView.layoutParams as MarginLayoutParams).apply {
+            marginStart = labelMargin
+        }
         (chevronView.layoutParams as MarginLayoutParams).apply {
             height = iconSize
             width = iconSize
@@ -283,12 +280,6 @@ open class QSTileViewImpl @JvmOverloads constructor(
         customDrawableView = sideView.requireViewById(R.id.customDrawable)
         chevronView = sideView.requireViewById(R.id.chevron)
         setChevronColor(getChevronColorForState(QSTile.State.DEFAULT_STATE))
-        // KitKat UI Project (14.5): the 4.4 tile showed a single centered
-        // glyph - no expand chevron, no per-tile side icon. The side view
-        // is kept in the hierarchy (QSAnimator references its position)
-        // but never rendered. Only QuickAccessWalletTile uses its custom
-        // side drawable; wallet is not a stock 4.4 surface.
-        sideView.visibility = GONE
         addView(sideView)
     }
 

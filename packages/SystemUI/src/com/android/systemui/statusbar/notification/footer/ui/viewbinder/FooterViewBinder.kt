@@ -141,26 +141,8 @@ object FooterViewBinder {
             }
         }
 
-        launch {
-            // KitKat UI P18.3: donor fidelity - the manage/history button is
-            // hidden (FooterViewModel pins isVisible false); wire the
-            // visibility flow so the flip back on is a one-line change.
-            viewModel.manageOrHistoryButton.isVisible.collect { isVisible ->
-                if (isVisible.isAnimating) {
-                    footer.setManageButtonVisible(
-                        isVisible.value,
-                        /* animate = */ true,
-                    ) { _ ->
-                        isVisible.stopAnimating()
-                    }
-                } else {
-                    footer.setManageButtonVisible(
-                        isVisible.value,
-                        /* animate = */ false,
-                    )
-                }
-            }
-        }
+        // NOTE: The manage/history button is always visible as long as the footer is visible, no
+        //  need to update the visibility here.
     }
 
     private suspend fun bindMessage(
