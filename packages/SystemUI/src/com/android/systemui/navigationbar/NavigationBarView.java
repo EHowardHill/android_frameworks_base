@@ -548,27 +548,27 @@ public class NavigationBarView extends FrameLayout {
         final boolean useAltBack =
                 (mNavigationIconHints & StatusBarManager.NAVIGATION_HINT_BACK_ALT) != 0;
         final boolean isRtl = mConfiguration.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+        // KitKat UI P18.2: 4.4 NEVER rotated the back glyph - the arrow
+        // pointed left, always, IME open or not. Suppress the modern
+        // IME-visibility rotation entirely in 3-button mode (the KitKat
+        // navbar is 3-button-only on this build; gestural mode keeps the
+        // stock behavior below for completeness).
+        if (!isGesturalMode(mNavBarMode)) {
+            if (drawable.getRotation() != 0f) {
+                ObjectAnimator.ofPropertyValuesHolder(drawable,
+                        PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_ROTATE, 0f),
+                        PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_TRANSLATE_Y,
+                                0f))
+                        .setDuration(200).start();
+            }
+            return;
+        }
         float degrees = useAltBack ? (isRtl ? 90 : -90) : 0;
         if (drawable.getRotation() == degrees) {
             return;
         }
 
-        if (isGesturalMode(mNavBarMode)) {
-            drawable.setRotation(degrees);
-            return;
-        }
-
-        // Animate the back button's rotation to the new degrees and only in portrait move up the
-        // back button to line up with the other buttons
-        float targetY = !mShowSwipeUpUi && !mIsVertical && useAltBack
-                ? - getResources().getDimension(R.dimen.navbar_back_button_ime_offset)
-                : 0;
-        ObjectAnimator navBarAnimator = ObjectAnimator.ofPropertyValuesHolder(drawable,
-                PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_ROTATE, degrees),
-                PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_TRANSLATE_Y, targetY));
-        navBarAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-        navBarAnimator.setDuration(200);
-        navBarAnimator.start();
+        drawable.setRotation(degrees);
     }
 
     private void orientHomeButton(KeyButtonDrawable drawable) {

@@ -265,6 +265,23 @@ public class FooterView extends StackScrollerDecorView {
         }
     }
 
+    /**
+     * KitKat UI P18.3: donor fidelity - the manage/history footer button is
+     * retired (the 4.4 shade had no such button; clear-all lives in the
+     * header X). Plain GONE; re-enabling is the FooterViewModel flip.
+     */
+    public void setManageButtonVisible(boolean visible, boolean animate) {
+        setManageButtonVisible(visible, animate, null);
+    }
+
+    public void setManageButtonVisible(boolean visible, boolean animate,
+            Consumer<Boolean> onAnimationEnded) {
+        mManageOrHistoryButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (onAnimationEnded != null) {
+            onAnimationEnded.accept(visible);
+        }
+    }
+
     /** Set onClickListener for the manage/history button. */
     public void setManageButtonClickListener(OnClickListener listener) {
         mManageOrHistoryButton.setOnClickListener(listener);

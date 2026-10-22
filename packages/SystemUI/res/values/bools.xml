@@ -28,8 +28,14 @@
     <!-- Whether to enable clipping on Notification Views -->
     <bool name="notification_enable_clipping">true</bool>
 
-    <!-- Whether to enable transparent background for notification scrims -->
-    <bool name="notification_scrim_transparent">false</bool>
+    <!-- KitKat UI P18.5: the 4.4 shade panel was OPAQUE - it rode the
+         PanelView height animation at full alpha with the grab handle
+         attached; the modern scrim fade (behind/notifications scrims
+         darkening with expansion) reads as a post-4.4 fade. Pinning this
+         true zeroes the UNLOCKED-state scrim alphas (ScrimController
+         mTransparentScrimBackground path), so the P3 gradient panel is
+         fully opaque through the whole open/drag/fling - donor ride. -->
+    <bool name="notification_scrim_transparent">true</bool>
 
     <!-- Control whether to force apps to give up control over the display of system bars at all
      times regardless of System Ui Flags.

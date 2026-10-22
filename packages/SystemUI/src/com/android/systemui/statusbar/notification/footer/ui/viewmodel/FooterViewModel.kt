@@ -67,7 +67,11 @@ class FooterViewModel(
         FooterButtonViewModel(
             labelId = manageOrHistoryButtonText,
             accessibilityDescriptionId = manageOrHistoryButtonText,
-            isVisible = flowOf(AnimatedValue.NotAnimating(true)),
+            // KitKat UI P18.3: the donor shade had NO manage/history footer
+            // button (clear-all lives in the header X, ShadeHeaderController).
+            // Full-donor-fidelity ruling: footer row hidden; the binder keeps
+            // wiring the click/label paths so re-enabling is a one-line flip.
+            isVisible = flowOf(AnimatedValue.NotAnimating(false)),
         )
 
     val message: FooterMessageViewModel =
