@@ -37,12 +37,12 @@ easier.
     <style name="Widget.DeviceDefault.Button.Small" parent="Widget.Holo.Button.Small"/>
     <style name="Widget.DeviceDefault.Button.Inset" parent="Widget.Holo.Button.Inset"/>
     <style name="Widget.DeviceDefault.Button.Toggle" parent="Widget.Holo.Button.Toggle"/>
-    <style name="Widget.DeviceDefault.Button.Colored" parent="Widget.Material.Button.Colored">
-        <item name="outlineAmbientShadowColor">@color/btn_colored_background_material</item>
-        <item name="outlineSpotShadowColor">@color/btn_colored_background_material</item>
-        <item name="textAppearance">?attr/textAppearanceButton</item>
-        <item name="textColor">@color/btn_colored_text_material</item>
-    </style>
+    <!-- KitKat UI P17.1: 4.4 had no "colored button" concept - the normal
+         DeviceDefault button IS the accent button (Holo ghost-outline +
+         blue fill on press). Re-parent from Widget.Material.Button.Colored
+         (which carries elevation/tint chrome) to the Holo DeviceDefault
+         button. -->
+    <style name="Widget.DeviceDefault.Button.Colored" parent="Widget.DeviceDefault.Button"/>
     <style name="Widget.DeviceDefault.TextView" parent="Widget.Holo.TextView" />
     <style name="Widget.DeviceDefault.CheckedTextView" parent="Widget.Holo.CheckedTextView"/>
     <style name="Widget.DeviceDefault.AutoCompleteTextView" parent="Widget.Holo.AutoCompleteTextView"/>
@@ -139,6 +139,23 @@ easier.
     <style name="Widget.DeviceDefault.ListView.White" parent="Widget.Holo.ListView.White"/>
     <style name="Widget.DeviceDefault.MediaRouteButton" parent="Widget.Holo.MediaRouteButton" />
     <style name="Widget.DeviceDefault.NumberPicker" parent="Widget.Holo.NumberPicker"/>
+    <!-- KitKat UI P17.1 residual-Material notes (philosophy: accept and
+         document - post-KitKat surfaces render normal-modern):
+         - Notification.* widgets/typography below stay Material ON PURPOSE:
+           they back app remote views; the 4.4 typography is pinned directly
+           onto the Material notification styles (P12.6), and re-parenting
+           would risk breaking modern MessagingStyle/remote-input contracts.
+         - Widget.DeviceDefault.Toolbar stays Material: Toolbar did not exist
+           in 4.4 (4.4 used action bars); keep modern chrome, only the
+           title/subtitle text appearances are DeviceDefault-pinned above.
+         - TextAppearance.Material typography scale (Body1/2, Subhead,
+           Headline, Display*, Title, Caption) stays Material: Lollipop-era
+           concepts with no 4.4 counterpart; modern apps measure against it.
+         - Preference.DeviceDefault.* / AlertDialog.DeviceDefault / ButtonBar
+           / SegmentedButton stay Material: modern Settings renders through
+           SettingsLib PreferenceTheme and depends on Material measure
+           behavior (P7 styled the chrome at the SettingsLib layer instead).
+         -->
     <style name="Widget.DeviceDefault.Notification.Text" parent="Widget.Material.Notification.Text">
         <item name="textAppearance">@style/TextAppearance.DeviceDefault.Notification</item>
     </style>
