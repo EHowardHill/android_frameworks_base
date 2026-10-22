@@ -437,6 +437,14 @@ public class QSPanel extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mFooter = findViewById(R.id.qs_footer);
+        // KitKat UI P18.4: the 4.4 QS panel had NO build/version-text footer
+        // above the tile grid (or the brightness slider). Hide it so the
+        // slider sits directly under the 48dp header clearance
+        // (qs_panel_padding_top) - the dead band it left (48dp height +
+        // 8dp bottom margin) was the gap between header and brightness bar.
+        if (mFooter != null) {
+            mFooter.setVisibility(View.GONE);
+        }
     }
 
     private void updateHorizontalLinearLayoutMargins() {
