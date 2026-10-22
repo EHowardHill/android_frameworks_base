@@ -96,7 +96,7 @@ predates it:
 
 ---
 
-## 3. Step 1 - Initialize the tree
+## 3. Initialize the tree
 
 ```bash
 mkdir -p ~/android/lineage
@@ -107,7 +107,7 @@ repo init -u https://github.com/LineageOS/android.git -b lineage-21.0
 (Add `--git-depth=1` if you want to save disk space at the cost of
 shallow history - the forks carry their own tags either way.)
 
-## 4. Step 2 - Install the local manifest
+## 4. Install the local manifest
 
 Create `.repo/local_manifests/kitkat_ui_mods.xml` with exactly this
 content (this one file is the entire mod declaration):
@@ -194,7 +194,7 @@ this file with your dotfiles - `local_manifests/` is not under
 version control, so the manifest is the one thing a fresh machine
 cannot re-derive from the tree.
 
-## 5. Step 3 - Sync
+## 5. Sync
 
 ```bash
 cd ~/android/lineage
@@ -205,7 +205,7 @@ Expect a few hours and ~200 GB the first time. `-c` syncs only the
 needed branches. If a project fails, re-run the command - repo
 resumes.
 
-## 6. Step 4 - Build
+## 6. Build
 
 ```bash
 cd ~/android/lineage
@@ -232,7 +232,7 @@ When it finishes, the images are in `out/target/product/emu64x/`
 (`super.img`, `system.img`, `vendor.img`, `ramdisk-qemu.img`,
 `kernel-ranchu`, ...).
 
-## 7. Step 5 - Boot the emulator
+## 7. Boot the emulator
 
 After lunch, the tree's emulator binary is on PATH and picks the
 built images up automatically - no AVD, no SDK download:
@@ -279,79 +279,7 @@ adb shell settings put secure user_setup_complete 1
 adb shell settings put global show_first_crash_dialog 1
 ```
 
-## 8. Step 6 - Verify the mod
-
-Everything below was implemented and device-verified against the
-donor sources; the emulator checks are quick eyeballs.
-
-### Must look/act KitKat
-
-- **Framework theme**: dialogs, alerts, menus, toasts, buttons,
-  switches, spinners, text fields render Holo (dark by default,
-  square corners, Holo blue #33b5e5 accents). Roboto everywhere is
-  the 2013 cut (light/condensed variants included).
-- **Status bar**: opaque black, 25 dp tall, right-hand clock, white
-  KitKat icon set (arc-fan wifi, triangle cellular, squared battery
-  outline).
-- **Ticker**: with the shade closed, post a notification and watch
-  the 4.4 ticker scroll title/text through the status bar:
-
-  ```bash
-  adb shell cmd notification post -t "KitKat" kitkat "Hello from 2013"
-  ```
-
-- **Navigation bar**: outlined triangle/circle/square glyphs, glow +
-  brighten feedback on press.
-- **Recents**: the overview/recents button opens SystemUI's 4.4
-  vertical card list (the Launcher3 port has no Quickstep).
-- **Keyguard**: KitKat clock typeface and PIN pad restyle, Holo blue
-  accents.
-- **Volume panel**: dark slim rail with square ends, Holo blue fill.
-- **Power menu**: flat dark panel, single-column rows, Holo blue
-  press feedback.
-- **Screenshot overlay**: dark 4.4-style action chips.
-- **Keyboard**: dark Holo LatinIME with visible key letters,
-  suggestion strip; the KitKat theme is the forced default.
-- **Apps**: Calculator, SoundRecorder, Music, DeskClock, Calendar
-  all render the android-4.4.4 UI; Settings is dark Holo end to
-  end; the launcher is the KitKat Launcher3.
-- **Sounds**: lock/unlock, keypress, camera click etc. are the 4.4
-  effects.
-- **Easter egg**: Settings > About phone > tap the Android version.
-
-### Must look STOCK (the Phase 21 rollback - this is a feature)
-
-- Pull the shade down: the notification panel and quick settings
-  must be ordinary modern LineageOS - monet colors, rounded tiles,
-  the stock header/footer. No KitKat gradient, no 48 dp header row,
-  no clear-all X, no carrier label, no drag handle, no donor tile
-  set, no brightness tile/dialog. Notification rows use stock
-  radius and stock 14 sp titles.
-
-### ADB battery tips (how the project does QA)
-
-```bash
-adb exec-out screencap -p > /tmp/screen.png   # pixel-check chrome
-adb shell dumpsys activity activities | head  # what's on screen
-adb logcat -b crash                          # crash log
-```
-
-Drive tests with screencaps, not uiautomator - its view dumps go
-stale on this emulator. Software-rendered screencaps lag ~1-2 s, so
-sub-second effects (ticker start, navbar glow, overscroll) need
-patience or a real-GPU host.
-
-### Optional: widget playground
-
-The fork ships a dev tool APK exercising every Holo widget:
-
-```bash
-m KitKatWidgetPlayground
-find out -name "KitKatWidgetPlayground.apk" -print
-adb install -r <path-from-above>
-```
-
-## 9. Step 7 - Development loop
+## 8. Development loop
 
 To change mod code and retest:
 
@@ -382,7 +310,7 @@ frameworks/base (`kitkat-mods` -> fork `lineage-21.0`), Settings and
 Trebuchet. Tags: `kitkat/p<n>` per phase, pushed with
 `git push my_github --tags` in frameworks/base.
 
-## 10. Step 8 - Pull future mod updates
+## 9. Pull future mod updates
 
 The forks move forward on `lineage-21.0` (and `main` for
 Launcher3-Modern). To pick up new mod commits:
@@ -401,7 +329,7 @@ Nothing else changes - the manifest pins branches, not commits, so
 state instead, edit the manifest's `revision=` attributes to a tag
 (`kitkat/p21` is the shade/QS rollback snapshot).
 
-## 11. Troubleshooting
+## 10. Troubleshooting
 
 | Symptom | Fix |
 |---|---|
@@ -417,7 +345,7 @@ state instead, edit the manifest's `revision=` attributes to a tag
 | Media playback errors in Music/DeskClock | That is the emulated audio HAL. Test with `-no-audio` removed and, ideally, a real GPU host. |
 | `repo sync` SSL/proxy failures | Standard git/repo proxy configuration; retry - resume is safe. |
 
-## 12. Where things live (map for the curious)
+## 11. Where things live (map for the curious)
 
 - `~/android/lineage/.repo/local_manifests/kitkat_ui_mods.xml` - the
   mod declaration (this file is NOT under version control by
